@@ -1,1837 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0
-  }
-
-  body {
-    background: #0f1117;
-    min-height: 100vh;
-    font-family: var(--font-sans);
-    color: #e4e4e7
-  }
-
-  .navbar {
-    background: #0f1117;
-    border-bottom: 0.5px solid #2a2a35;
-    padding: 0 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    position: sticky;
-    top: 0;
-    z-index: 100
-  }
-
-  .logo {
-    font-size: 17px;
-    font-weight: 500;
-    color: #a78bfa;
-    cursor: pointer
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap
-  }
-
-  .nav-btn {
-    background: transparent;
-    border: 0.5px solid transparent;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 13px;
-    color: #9ca3af;
-    cursor: pointer;
-    font-family: var(--font-sans);
-    transition: all 0.15s
-  }
-
-  .nav-btn:hover {
-    color: #e4e4e7;
-    background: #1c1c27
-  }
-
-  .nav-btn.active {
-    color: #a78bfa;
-    border-color: #3a2f6a;
-    background: #1a1430
-  }
-
-  .nav-btn.admin-btn {
-    color: #fbbf24
-  }
-
-  .nav-btn.admin-btn.active {
-    background: #1c1408;
-    border-color: #d97706
-  }
-
-  /* Setup banner */
-  .setup-banner {
-    background: #1c1408;
-    border: 0.5px solid #d97706;
-    border-radius: 10px;
-    padding: 1.25rem 1.5rem;
-    margin: 1.5rem 2rem
-  }
-
-  .setup-banner h3 {
-    font-size: 15px;
-    font-weight: 500;
-    color: #fbbf24;
-    margin-bottom: 8px
-  }
-
-  .setup-banner p {
-    font-size: 13px;
-    color: #fcd34d;
-    line-height: 1.6;
-    margin-bottom: 8px
-  }
-
-  .setup-banner code {
-    background: #0f0a00;
-    border: 0.5px solid #92400e;
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-size: 12px;
-    color: #fde68a;
-    font-family: monospace
-  }
-
-  .setup-form {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 10px
-  }
-
-  .setup-form input {
-    flex: 1;
-    min-width: 220px;
-    background: #13131e;
-    border: 0.5px solid #92400e;
-    border-radius: 8px;
-    padding: 9px 12px;
-    font-size: 13px;
-    color: #e4e4e7;
-    outline: none;
-    font-family: monospace
-  }
-
-  .setup-form input:focus {
-    border-color: #f59e0b
-  }
-
-  .btn-setup {
-    background: #d97706;
-    color: #000;
-    border: none;
-    border-radius: 8px;
-    padding: 9px 18px;
-    font-size: 13px;
-    cursor: pointer;
-    font-weight: 500;
-    white-space: nowrap
-  }
-
-  .btn-setup:hover {
-    background: #b45309
-  }
-
-  /* Listings */
-  .hero {
-    padding: 3rem 2rem 2rem;
-    text-align: center;
-    border-bottom: 0.5px solid #2a2a35
-  }
-
-  .hero h1 {
-    font-size: 28px;
-    font-weight: 500;
-    color: #f4f4f5;
-    margin-bottom: 10px
-  }
-
-  .hero p {
-    font-size: 14px;
-    color: #9ca3af;
-    margin-bottom: 1.5rem
-  }
-
-  .city-pill {
-    display: inline-block;
-    background: #1c1c27;
-    border: 0.5px solid #3a3a4a;
-    border-radius: 20px;
-    padding: 4px 14px;
-    font-size: 13px;
-    color: #a78bfa;
-    margin-bottom: 1.5rem
-  }
-
-  .search-bar {
-    display: flex;
-    gap: 8px;
-    max-width: 520px;
-    margin: 0 auto
-  }
-
-  .search-bar input {
-    flex: 1;
-    background: #1c1c27;
-    border: 0.5px solid #3a3a4a;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 14px;
-    color: #e4e4e7;
-    outline: none;
-    transition: border-color 0.2s
-  }
-
-  .search-bar input::placeholder {
-    color: #6b7280
-  }
-
-  .search-bar input:focus {
-    border-color: #a78bfa
-  }
-
-  .btn-primary {
-    background: #7c3aed;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background 0.15s
-  }
-
-  .btn-primary:hover {
-    background: #6d28d9
-  }
-
-  .btn-pink {
-    background: #be185d;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-    font-weight: 500
-  }
-
-  .btn-pink:hover {
-    background: #9d174d
-  }
-
-  .btn-blue {
-    background: #1d4ed8;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-    font-weight: 500
-  }
-
-  .btn-blue:hover {
-    background: #1e40af
-  }
-
-  .filters-bar {
-    display: flex;
-    gap: 10px;
-    padding: 0.9rem 2rem;
-    background: #13131e;
-    border-bottom: 0.5px solid #2a2a35;
-    flex-wrap: wrap;
-    align-items: center
-  }
-
-  .filters-bar span {
-    font-size: 13px;
-    color: #6b7280
-  }
-
-  select {
-    background: #1c1c27;
-    border: 0.5px solid #3a3a4a;
-    border-radius: 8px;
-    padding: 6px 11px;
-    font-size: 13px;
-    color: #e4e4e7;
-    cursor: pointer;
-    outline: none;
-    font-family: var(--font-sans)
-  }
-
-  .tag {
-    display: inline-flex;
-    align-items: center;
-    background: #1c1c27;
-    border: 0.5px solid #3a3a4a;
-    border-radius: 20px;
-    padding: 5px 12px;
-    font-size: 13px;
-    color: #a78bfa;
-    cursor: pointer;
-    transition: all 0.15s
-  }
-
-  .tag:hover {
-    border-color: #7c3aed;
-    background: #1a1430
-  }
-
-  .tag.active {
-    background: #2e1f5e;
-    border-color: #7c3aed
-  }
-
-  .tag.pink {
-    color: #f472b6
-  }
-
-  .tag.pink.active {
-    background: #3b0a2a;
-    border-color: #be185d
-  }
-
-  .tag.blue {
-    color: #60a5fa
-  }
-
-  .tag.blue.active {
-    background: #0f1e4a;
-    border-color: #1d4ed8
-  }
-
-  .listings {
-    padding: 1.5rem 2rem
-  }
-
-  .listings-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.25rem
-  }
-
-  .listings-header h2 {
-    font-size: 15px;
-    font-weight: 500;
-    color: #e4e4e7
-  }
-
-  .listings-header span {
-    font-size: 13px;
-    color: #6b7280
-  }
-
-  .section-badge {
-    font-size: 11px;
-    padding: 3px 9px;
-    border-radius: 20px;
-    margin-left: 8px;
-    font-weight: 500;
-    vertical-align: middle
-  }
-
-  .badge-girls {
-    background: #3b0a2a;
-    color: #f472b6
-  }
-
-  .badge-boys {
-    background: #0f1e4a;
-    color: #60a5fa
-  }
-
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 14px
-  }
-
-  .card {
-    background: #1c1c27;
-    border: 0.5px solid #2a2a35;
-    border-radius: 12px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s
-  }
-
-  .card:hover {
-    border-color: #7c3aed;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.15)
-  }
-
-  .card.girls:hover {
-    border-color: #be185d;
-    box-shadow: 0 8px 24px rgba(190, 24, 93, 0.15)
-  }
-
-  .card.boys:hover {
-    border-color: #1d4ed8;
-    box-shadow: 0 8px 24px rgba(29, 78, 216, 0.15)
-  }
-
-  .card-img-placeholder {
-    width: 100%;
-    height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    transition: transform 0.35s
-  }
-
-  .card-thumb {
-    width: 100%;
-    overflow: hidden
-  }
-
-  .card-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.35s
-  }
-
-  .card:hover .card-thumb img {
-    transform: scale(1.06)
-  }
-
-  .card-thumb-placeholder {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px
-  }
-
-  .card:hover .card-img-placeholder {
-    transform: scale(1.06)
-  }
-
-  .i1 {
-    background: linear-gradient(135deg, #27a2e9, #075985)
-  }
-
-  .i2 {
-    background: linear-gradient(135deg, #064e3b, #065f46)
-  }
-
-  .i3 {
-    background: linear-gradient(135deg, #1e3a5f, #1e40af)
-  }
-
-  .i4 {
-    background: linear-gradient(135deg, #0f172a, #1e3a5f)
-  }
-
-  .i5 {
-    background: linear-gradient(135deg, #14532d, #166534)
-  }
-
-  .i6 {
-    background: linear-gradient(135deg, #431407, #7c2d12)
-  }
-
-  .i7 {
-    background: linear-gradient(135deg, #0f2a1e, #064e3b)
-  }
-
-  .ig1 {
-    background: linear-gradient(135deg, #1e1b4b, #312e81)
-  }
-
-  .ig2 {
-    background: linear-gradient(135deg, #3b0a2a, #831843)
-  }
-
-  .ig3 {
-    background: linear-gradient(135deg, #500724, #9d174d)
-  }
-
-  .ig4 {
-    background: linear-gradient(135deg, #1e1b4b, #4c1d95)
-  }
-
-  .ig5 {
-    background: linear-gradient(135deg, #4a1942, #6d1f69)
-  }
-
-  .ig6 {
-    background: linear-gradient(135deg, #2d1b4b, #5b21b6)
-  }
-
-  .card-body {
-    padding: 12px 14px
-  }
-
-  .card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 4px
-  }
-
-  .card-name {
-    font-size: 13px;
-    font-weight: 500;
-    color: #f4f4f5;
-    flex: 1;
-    margin-right: 8px
-  }
-
-  .avail {
-    font-size: 11px;
-    padding: 2px 7px;
-    border-radius: 20px;
-    font-weight: 500;
-    white-space: nowrap
-  }
-
-  .avail-green {
-    background: #052e16;
-    color: #4ade80
-  }
-
-  .avail-amber {
-    background: #431407;
-    color: #fb923c
-  }
-
-  .card-location {
-    font-size: 11px;
-    color: #6b7280;
-    margin-bottom: 7px;
-    line-height: 1.5
-  }
-
-  .card-tags {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    margin-bottom: 8px
-  }
-
-  .mini-tag {
-    font-size: 11px;
-    background: #13131e;
-    color: #a78bfa;
-    border: 0.5px solid #3a3a4a;
-    padding: 2px 6px;
-    border-radius: 5px
-  }
-
-  .mini-tag.pink {
-    color: #f472b6
-  }
-
-  .mini-tag.blue {
-    color: #60a5fa
-  }
-
-  .card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 8px;
-    border-top: 0.5px solid #2a2a35
-  }
-
-  .price {
-    font-size: 14px;
-    font-weight: 500;
-    color: #a78bfa
-  }
-
-  .price.pink {
-    color: #f472b6
-  }
-
-  .price.blue {
-    color: #60a5fa
-  }
-
-  .price span {
-    font-size: 11px;
-    color: #6b7280;
-    font-weight: 400
-  }
-
-  .stars {
-    font-size: 11px;
-    color: #fbbf24
-  }
-
-  .stars em {
-    color: #6b7280;
-    font-style: normal;
-    font-size: 11px
-  }
-
-  .hidden {
-    display: none !important
-  }
-
-  .no-results {
-    text-align: center;
-    color: #6b7280;
-    font-size: 14px;
-    padding: 2rem 0
-  }
-
-  .footer {
-    background: #0f1117;
-    border-top: 0.5px solid #2a2a35;
-    padding: 1rem 2rem;
-    text-align: center;
-    font-size: 12px;
-    color: #4b5563
-  }
-
-  /* Contact */
-  .contact-wrap {
-    background: #13131e;
-    min-height: 80vh;
-    padding: 2.5rem 2rem
-  }
-
-  .contact-inner {
-    max-width: 540px;
-    margin: 0 auto
-  }
-
-  .contact-inner h2 {
-    font-size: 20px;
-    font-weight: 500;
-    color: #f4f4f5;
-    margin-bottom: 6px
-  }
-
-  .contact-inner>p {
-    font-size: 14px;
-    color: #9ca3af;
-    margin-bottom: 1.5rem
-  }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-bottom: 13px
-  }
-
-  .form-group label {
-    font-size: 12px;
-    color: #9ca3af
-  }
-
-  .form-group input,
-  .form-group textarea,
-  .form-group select {
-    background: #1c1c27;
-    border: 0.5px solid #3a3a4a;
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 14px;
-    color: #e4e4e7;
-    outline: none;
-    font-family: var(--font-sans);
-    transition: border-color 0.2s;
-    width: 100%
-  }
-
-  .form-group input:focus,
-  .form-group textarea:focus,
-  .form-group select:focus {
-    border-color: #a78bfa
-  }
-
-  .form-group input.err,
-  .form-group textarea.err {
-    border-color: #ef4444
-  }
-
-  .form-group textarea {
-    resize: vertical;
-    min-height: 85px
-  }
-
-  .btn-submit {
-    width: 100%;
-    background: #7c3aed;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 13px;
-    font-size: 15px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.15s
-  }
-
-  .btn-submit:hover {
-    background: #6d28d9
-  }
-
-  .btn-submit:disabled {
-    background: #3b2070;
-    cursor: not-allowed;
-    opacity: 0.7
-  }
-
-  .err-msg {
-    font-size: 12px;
-    color: #f87171;
-    margin-top: 2px
-  }
-
-  .alert {
-    border-radius: 10px;
-    padding: 1rem 1.25rem;
-    font-size: 14px;
-    margin-bottom: 1rem
-  }
-
-  .alert-error {
-    background: #2d0a0a;
-    border: 0.5px solid #7f1d1d;
-    color: #fca5a5
-  }
-
-  .alert-success {
-    background: #052e16;
-    border: 0.5px solid #166534;
-    color: #86efac;
-    text-align: center
-  }
-
-  .alert-success h3 {
-    font-size: 17px;
-    color: #4ade80;
-    margin-bottom: 6px
-  }
-
-  .firebase-status {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    padding: 8px 12px;
-    background: #1c1c27;
-    border-radius: 8px;
-    margin-bottom: 1rem
-  }
-
-  .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0
-  }
-
-  .dot-green {
-    background: #4ade80
-  }
-
-  .dot-red {
-    background: #f87171
-  }
-
-  .dot-amber {
-    background: #fbbf24
-  }
-
-  /* Detail */
-  .detail-page {
-    animation: fadeIn 0.25s ease
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(8px)
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0)
-    }
-  }
-
-  .detail-hero {
-    position: relative;
-    height: 220px;
-    overflow: hidden
-  }
-
-  .detail-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(15, 17, 23, 0.95) 0%, rgba(15, 17, 23, 0.2) 60%, transparent 100%)
-  }
-
-  .detail-hero-content {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 1.25rem 2rem
-  }
-
-  .detail-hero-content h1 {
-    font-size: 22px;
-    font-weight: 500;
-    color: #f4f4f5;
-    margin-bottom: 6px
-  }
-
-  .back-btn {
-    background: none;
-    border: none;
-    font-size: 13px;
-    color: #9ca3af;
-    cursor: pointer;
-    font-family: var(--font-sans);
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin-bottom: 10px;
-    transition: color 0.15s
-  }
-
-  .back-btn:hover {
-    color: #a78bfa
-  }
-
-  .detail-body {
-    padding: 1.25rem 2rem;
-    max-width: 760px
-  }
-
-  .detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 1.25rem
-  }
-
-  .dinfo {
-    background: #1c1c27;
-    border: 0.5px solid #2a2a35;
-    border-radius: 10px;
-    padding: 13px 15px
-  }
-
-  .dinfo-label {
-    font-size: 11px;
-    color: #6b7280;
-    margin-bottom: 4px
-  }
-
-  .dinfo-value {
-    font-size: 15px;
-    font-weight: 500;
-    color: #f4f4f5
-  }
-
-  .dsec {
-    margin-bottom: 1.25rem
-  }
-
-  .dsec h3 {
-    font-size: 12px;
-    font-weight: 500;
-    color: #6b7280;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 8px
-  }
-
-  .chip-list {
-    display: flex;
-    gap: 7px;
-    flex-wrap: wrap
-  }
-
-  .chip {
-    background: #1c1c27;
-    border: 0.5px solid #3a3a4a;
-    border-radius: 8px;
-    padding: 7px 12px;
-    font-size: 13px;
-    color: #e4e4e7;
-    display: flex;
-    align-items: center;
-    gap: 5px
-  }
-
-  .dbadge {
-    font-size: 11px;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-weight: 500
-  }
-
-  .badge-g {
-    background: #3b0a2a;
-    color: #f472b6;
-    border: 0.5px solid #be185d
-  }
-
-  .badge-b {
-    background: #0f1e4a;
-    color: #60a5fa;
-    border: 0.5px solid #1d4ed8
-  }
-
-  .cta-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 1.25rem
-  }
-
-  .btn-cta {
-    flex: 1;
-    border: none;
-    border-radius: 10px;
-    padding: 13px;
-    font-size: 14px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.15s;
-    font-family: var(--font-sans)
-  }
-
-  .btn-cta:hover {
-    transform: translateY(-1px)
-  }
-
-  .btn-cta-outline {
-    flex: 1;
-    background: transparent;
-    color: #e4e4e7;
-    border: 0.5px solid #3a3a4a;
-    border-radius: 10px;
-    padding: 13px;
-    font-size: 14px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.15s;
-    font-family: var(--font-sans)
-  }
-
-  .btn-cta-outline:hover {
-    background: #1c1c27;
-    border-color: #7c3aed;
-    color: #a78bfa
-  }
-
-  /* Admin */
-  .admin-wrap {
-    padding: 2rem
-  }
-
-  .admin-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1.25rem;
-    flex-wrap: wrap;
-    gap: 12px
-  }
-
-  .admin-top h2 {
-    font-size: 18px;
-    font-weight: 500;
-    color: #f4f4f5
-  }
-
-  .admin-top p {
-    font-size: 13px;
-    color: #6b7280;
-    margin-top: 3px
-  }
-
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 10px;
-    margin-bottom: 1.25rem
-  }
-
-  .stat {
-    background: #1c1c27;
-    border: 0.5px solid #2a2a35;
-    border-radius: 10px;
-    padding: 14px
-  }
-
-  .stat-label {
-    font-size: 11px;
-    color: #6b7280;
-    margin-bottom: 5px
-  }
-
-  .stat-val {
-    font-size: 22px;
-    font-weight: 500;
-    color: #f4f4f5
-  }
-
-  .admin-bar {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 1rem;
-    flex-wrap: wrap
-  }
-
-  .admin-bar input {
-    background: #1c1c27;
-    border: 0.5px solid #3a3a4a;
-    border-radius: 8px;
-    padding: 8px 11px;
-    font-size: 13px;
-    color: #e4e4e7;
-    outline: none;
-    font-family: var(--font-sans);
-    flex: 1;
-    min-width: 160px;
-    transition: border-color 0.2s
-  }
-
-  .admin-bar input:focus {
-    border-color: #a78bfa
-  }
-
-  .btn-danger {
-    background: transparent;
-    border: 0.5px solid #7f1d1d;
-    color: #fca5a5;
-    border-radius: 8px;
-    padding: 7px 13px;
-    font-size: 13px;
-    cursor: pointer;
-    font-family: var(--font-sans);
-    transition: all 0.15s
-  }
-
-  .btn-danger:hover {
-    background: #2d0a0a
-  }
-
-  .btn-refresh {
-    background: transparent;
-    border: 0.5px solid #3a3a4a;
-    color: #9ca3af;
-    border-radius: 8px;
-    padding: 7px 13px;
-    font-size: 13px;
-    cursor: pointer;
-    font-family: var(--font-sans);
-    transition: all 0.15s
-  }
-
-  .btn-refresh:hover {
-    border-color: #7c3aed;
-    color: #a78bfa
-  }
-
-  .table-wrap {
-    overflow-x: auto;
-    border-radius: 10px;
-    border: 0.5px solid #2a2a35
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px
-  }
-
-  th {
-    background: #13131e;
-    color: #6b7280;
-    font-weight: 500;
-    padding: 10px 13px;
-    text-align: left;
-    white-space: nowrap;
-    border-bottom: 0.5px solid #2a2a35
-  }
-
-  td {
-    padding: 10px 13px;
-    border-bottom: 0.5px solid #1a1a25;
-    color: #e4e4e7;
-    vertical-align: top
-  }
-
-  tr:last-child td {
-    border-bottom: none
-  }
-
-  tr:hover td {
-    background: #1a1a2a
-  }
-
-  .tbadge {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-weight: 500;
-    white-space: nowrap
-  }
-
-  .tg {
-    background: #3b0a2a;
-    color: #f472b6
-  }
-
-  .tb {
-    background: #0f1e4a;
-    color: #60a5fa
-  }
-
-  .ta {
-    background: #2e1f5e;
-    color: #a78bfa
-  }
-
-  .trole {
-    background: #1c1c27;
-    color: #9ca3af;
-    border: 0.5px solid #3a3a4a;
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 6px
-  }
-
-  .tmsg {
-    max-width: 180px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #9ca3af
-  }
-
-  .ttime {
-    color: #6b7280;
-    white-space: nowrap;
-    font-size: 11px
-  }
-
-  .del-btn {
-    background: transparent;
-    border: 0.5px solid #3a3a4a;
-    color: #6b7280;
-    border-radius: 6px;
-    padding: 3px 9px;
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: var(--font-sans)
-  }
-
-  .del-btn:hover {
-    border-color: #7f1d1d;
-    color: #fca5a5;
-    background: #2d0a0a
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 2.5rem;
-    color: #6b7280
-  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0f1117;min-height:100vh;font-family:system-ui,-apple-system,sans-serif;color:#e4e4e7}
+
+  /* NAVBAR */
+  .navbar{background:#0f1117;border-bottom:.5px solid #2a2a35;padding:0 1rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;gap:8px}
+  .logo{font-size:16px;font-weight:500;color:#a78bfa;cursor:pointer;white-space:nowrap;flex-shrink:0}
+  .nav-links{display:flex;gap:4px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-btn{background:transparent;border:.5px solid transparent;border-radius:8px;padding:5px 10px;font-size:13px;color:#9ca3af;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap;flex-shrink:0}
+  .nav-btn:hover{color:#e4e4e7;background:#1c1c27}
+  .nav-btn.active{color:#a78bfa;border-color:#3a2f6a;background:#1a1430}
+  .nav-btn.admin-btn{color:#fbbf24}
+  .nav-btn.admin-btn.active{background:#1c1408;border-color:#d97706}
+
+  /* SETUP BANNER */
+  .setup-banner{background:#1c1408;border:.5px solid #d97706;border-radius:10px;padding:1.25rem 1.5rem;margin:1.5rem 1rem}
+  .setup-banner h3{font-size:15px;font-weight:500;color:#fbbf24;margin-bottom:8px}
+  .setup-banner p{font-size:13px;color:#fcd34d;line-height:1.6;margin-bottom:8px}
+  .setup-banner code{background:#0f0a00;border:.5px solid #92400e;border-radius:4px;padding:2px 6px;font-size:12px;color:#fde68a;font-family:monospace}
+  .setup-form{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .setup-form input{flex:1;min-width:200px;background:#13131e;border:.5px solid #92400e;border-radius:8px;padding:9px 12px;font-size:13px;color:#e4e4e7;outline:none;font-family:monospace}
+  .setup-form input:focus{border-color:#f59e0b}
+  .btn-setup{background:#d97706;color:#000;border:none;border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer;font-weight:500;white-space:nowrap}
+  .btn-setup:hover{background:#b45309}
+
+  /* HERO */
+  .hero{padding:2rem 1rem 1.5rem;text-align:center;border-bottom:.5px solid #2a2a35}
+  .hero h1{font-size:clamp(20px,4vw,28px);font-weight:500;color:#f4f4f5;margin-bottom:10px}
+  .hero p{font-size:14px;color:#9ca3af;margin-bottom:1.25rem}
+  .city-pill{display:inline-block;background:#1c1c27;border:.5px solid #3a3a4a;border-radius:20px;padding:4px 14px;font-size:13px;color:#a78bfa;margin-bottom:1.25rem}
+  .search-bar{display:flex;gap:8px;max-width:520px;margin:0 auto}
+  .search-bar input{flex:1;background:#1c1c27;border:.5px solid #3a3a4a;border-radius:8px;padding:10px 14px;font-size:14px;color:#e4e4e7;outline:none;transition:border-color .2s;min-width:0}
+  .search-bar input::placeholder{color:#6b7280}
+  .search-bar input:focus{border-color:#a78bfa}
+  .btn-primary{background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:14px;cursor:pointer;font-weight:500;transition:background .15s;white-space:nowrap}
+  .btn-primary:hover{background:#6d28d9}
+  .btn-pink{background:#be185d;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:14px;cursor:pointer;font-weight:500;white-space:nowrap}
+  .btn-pink:hover{background:#9d174d}
+  .btn-blue{background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:14px;cursor:pointer;font-weight:500;white-space:nowrap}
+  .btn-blue:hover{background:#1e40af}
+
+  /* FILTERS */
+  .filters-bar{display:flex;gap:8px;padding:.75rem 1rem;background:#13131e;border-bottom:.5px solid #2a2a35;flex-wrap:wrap;align-items:center}
+  .filters-bar span{font-size:13px;color:#6b7280;flex-shrink:0}
+  select{background:#1c1c27;border:.5px solid #3a3a4a;border-radius:8px;padding:6px 10px;font-size:13px;color:#e4e4e7;cursor:pointer;outline:none;font-family:inherit;max-width:100%}
+  .tag{display:inline-flex;align-items:center;background:#1c1c27;border:.5px solid #3a3a4a;border-radius:20px;padding:5px 12px;font-size:13px;color:#a78bfa;cursor:pointer;transition:all .15s;white-space:nowrap}
+  .tag:hover{border-color:#7c3aed;background:#1a1430}
+  .tag.active{background:#2e1f5e;border-color:#7c3aed}
+  .tag.pink{color:#f472b6}
+  .tag.pink.active{background:#3b0a2a;border-color:#be185d}
+  .tag.blue{color:#60a5fa}
+  .tag.blue.active{background:#0f1e4a;border-color:#1d4ed8}
+
+  /* LISTINGS */
+  .listings{padding:1.25rem 1rem}
+  .listings-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:6px}
+  .listings-header h2{font-size:15px;font-weight:500;color:#e4e4e7}
+  .listings-header span{font-size:13px;color:#6b7280}
+  .section-badge{font-size:11px;padding:3px 9px;border-radius:20px;margin-left:8px;font-weight:500;vertical-align:middle}
+  .badge-girls{background:#3b0a2a;color:#f472b6}
+  .badge-boys{background:#0f1e4a;color:#60a5fa}
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  @media(max-width:480px){.card-grid{grid-template-columns:1fr 1fr;gap:8px}}
+  @media(max-width:340px){.card-grid{grid-template-columns:1fr}}
+
+  /* CARD */
+  .card{background:#1c1c27;border:.5px solid #2a2a35;border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .2s,transform .2s,box-shadow .2s}
+  .card:hover{border-color:#7c3aed;transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,58,237,.15)}
+  .card.girls:hover{border-color:#be185d;box-shadow:0 8px 24px rgba(190,24,93,.15)}
+  .card.boys:hover{border-color:#1d4ed8;box-shadow:0 8px 24px rgba(29,78,216,.15)}
+  .card-thumb{width:100%;overflow:hidden}
+  .card-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
+  .card:hover .card-thumb img{transform:scale(1.06)}
+  .card-thumb-placeholder{width:100%;display:flex;align-items:center;justify-content:center;font-size:28px}
+  .i1{background:linear-gradient(135deg,#27a2e9,#075985)}
+  .i2{background:linear-gradient(135deg,#064e3b,#065f46)}
+  .i3{background:linear-gradient(135deg,#1e3a5f,#1e40af)}
+  .i4{background:linear-gradient(135deg,#0f172a,#1e3a5f)}
+  .i5{background:linear-gradient(135deg,#14532d,#166534)}
+  .i6{background:linear-gradient(135deg,#431407,#7c2d12)}
+  .i7{background:linear-gradient(135deg,#0f2a1e,#064e3b)}
+  .ig1{background:linear-gradient(135deg,#1e1b4b,#312e81)}
+  .ig2{background:linear-gradient(135deg,#3b0a2a,#831843)}
+  .ig3{background:linear-gradient(135deg,#500724,#9d174d)}
+  .ig4{background:linear-gradient(135deg,#1e1b4b,#4c1d95)}
+  .ig5{background:linear-gradient(135deg,#4a1942,#6d1f69)}
+  .ig6{background:linear-gradient(135deg,#2d1b4b,#5b21b6)}
+  .card-body{padding:10px 12px}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+  .card-name{font-size:12px;font-weight:500;color:#f4f4f5;flex:1;margin-right:6px;line-height:1.4}
+  .avail{font-size:10px;padding:2px 6px;border-radius:20px;font-weight:500;white-space:nowrap;flex-shrink:0}
+  .avail-green{background:#052e16;color:#4ade80}
+  .avail-amber{background:#431407;color:#fb923c}
+  .card-location{font-size:11px;color:#6b7280;margin-bottom:6px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:7px}
+  .mini-tag{font-size:10px;background:#13131e;color:#a78bfa;border:.5px solid #3a3a4a;padding:2px 5px;border-radius:4px}
+  .mini-tag.pink{color:#f472b6}
+  .mini-tag.blue{color:#60a5fa}
+  .card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:7px;border-top:.5px solid #2a2a35}
+  .price{font-size:13px;font-weight:500;color:#a78bfa}
+  .price.pink{color:#f472b6}
+  .price.blue{color:#60a5fa}
+  .price span{font-size:11px;color:#6b7280;font-weight:400}
+  .stars{font-size:10px;color:#fbbf24}
+  .stars em{color:#6b7280;font-style:normal;font-size:10px}
+  .hidden{display:none!important}
+  .no-results{text-align:center;color:#6b7280;font-size:14px;padding:2rem 0}
+
+  /* FOOTER */
+  .footer{background:#0f1117;border-top:.5px solid #2a2a35;padding:1rem;text-align:center;font-size:12px;color:#4b5563}
+
+  /* CONTACT */
+  .contact-wrap{background:#13131e;min-height:80vh;padding:2rem 1rem}
+  .contact-inner{max-width:540px;margin:0 auto}
+  .contact-inner h2{font-size:20px;font-weight:500;color:#f4f4f5;margin-bottom:6px}
+  .contact-inner>p{font-size:14px;color:#9ca3af;margin-bottom:1.5rem}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:480px){.form-row{grid-template-columns:1fr}}
+  .form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+  .form-group label{font-size:12px;color:#9ca3af}
+  .form-group input,.form-group textarea,.form-group select{background:#1c1c27;border:.5px solid #3a3a4a;border-radius:8px;padding:10px 12px;font-size:14px;color:#e4e4e7;outline:none;font-family:inherit;transition:border-color .2s;width:100%}
+  .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:#a78bfa}
+  .form-group input.err,.form-group textarea.err{border-color:#ef4444}
+  .form-group textarea{resize:vertical;min-height:85px}
+  .btn-submit{width:100%;background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:13px;font-size:15px;cursor:pointer;font-weight:500;transition:all .15s}
+  .btn-submit:hover{background:#6d28d9}
+  .btn-submit:disabled{background:#3b2070;cursor:not-allowed;opacity:.7}
+  .err-msg{font-size:12px;color:#f87171;margin-top:2px}
+  .alert{border-radius:10px;padding:1rem 1.25rem;font-size:14px;margin-bottom:1rem}
+  .alert-error{background:#2d0a0a;border:.5px solid #7f1d1d;color:#fca5a5}
+  .alert-success{background:#052e16;border:.5px solid #166534;color:#86efac;text-align:center}
+  .alert-success h3{font-size:17px;color:#4ade80;margin-bottom:6px}
+  .firebase-status{display:flex;align-items:center;gap:6px;font-size:12px;padding:8px 12px;background:#1c1c27;border-radius:8px;margin-bottom:1rem}
+  .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .dot-green{background:#4ade80}
+  .dot-red{background:#f87171}
+  .dot-amber{background:#fbbf24}
+
+  /* DETAIL */
+  .detail-page{animation:fadeIn .25s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .detail-hero{position:relative;height:200px;overflow:hidden}
+  .detail-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(15,17,23,.95) 0%,rgba(15,17,23,.2) 60%,transparent 100%)}
+  .detail-hero-content{position:absolute;bottom:0;left:0;right:0;padding:1rem}
+  .detail-hero-content h1{font-size:clamp(16px,4vw,22px);font-weight:500;color:#f4f4f5;margin-bottom:6px}
+  .back-btn{background:none;border:none;font-size:13px;color:#9ca3af;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:4px;margin-bottom:10px;transition:color .15s}
+  .back-btn:hover{color:#a78bfa}
+  .detail-body{padding:1rem;max-width:760px}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem}
+  @media(max-width:400px){.detail-grid{grid-template-columns:1fr}}
+  .dinfo{background:#1c1c27;border:.5px solid #2a2a35;border-radius:10px;padding:12px 14px}
+  .dinfo-label{font-size:11px;color:#6b7280;margin-bottom:4px}
+  .dinfo-value{font-size:15px;font-weight:500;color:#f4f4f5}
+  .dsec{margin-bottom:1.25rem}
+  .dsec h3{font-size:12px;font-weight:500;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+  .chip-list{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{background:#1c1c27;border:.5px solid #3a3a4a;border-radius:8px;padding:7px 12px;font-size:13px;color:#e4e4e7;display:flex;align-items:center;gap:5px}
+  .dbadge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500}
+  .badge-g{background:#3b0a2a;color:#f472b6;border:.5px solid #be185d}
+  .badge-b{background:#0f1e4a;color:#60a5fa;border:.5px solid #1d4ed8}
+  .cta-row{display:flex;gap:10px;margin-top:1.25rem;flex-wrap:wrap}
+  .btn-cta{flex:1;min-width:140px;border:none;border-radius:10px;padding:13px;font-size:14px;cursor:pointer;font-weight:500;transition:all .15s;font-family:inherit}
+  .btn-cta:hover{transform:translateY(-1px)}
+  .btn-cta-outline{flex:1;min-width:140px;background:transparent;color:#e4e4e7;border:.5px solid #3a3a4a;border-radius:10px;padding:13px;font-size:14px;cursor:pointer;font-weight:500;transition:all .15s;font-family:inherit}
+  .btn-cta-outline:hover{background:#1c1c27;border-color:#7c3aed;color:#a78bfa}
+
+  /* ADMIN */
+  .admin-wrap{padding:1.5rem 1rem}
+  .admin-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;flex-wrap:wrap;gap:12px}
+  .admin-top h2{font-size:18px;font-weight:500;color:#f4f4f5}
+  .admin-top p{font-size:13px;color:#6b7280;margin-top:3px}
+  .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:1.25rem}
+  .stat{background:#1c1c27;border:.5px solid #2a2a35;border-radius:10px;padding:12px}
+  .stat-label{font-size:11px;color:#6b7280;margin-bottom:5px}
+  .stat-val{font-size:22px;font-weight:500;color:#f4f4f5}
+  .admin-bar{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
+  .admin-bar input{background:#1c1c27;border:.5px solid #3a3a4a;border-radius:8px;padding:8px 11px;font-size:13px;color:#e4e4e7;outline:none;font-family:inherit;flex:1;min-width:140px;transition:border-color .2s}
+  .admin-bar input:focus{border-color:#a78bfa}
+  .btn-danger{background:transparent;border:.5px solid #7f1d1d;color:#fca5a5;border-radius:8px;padding:7px 13px;font-size:13px;cursor:pointer;font-family:inherit;transition:all .15s}
+  .btn-danger:hover{background:#2d0a0a}
+  .btn-refresh{background:transparent;border:.5px solid #3a3a4a;color:#9ca3af;border-radius:8px;padding:7px 13px;font-size:13px;cursor:pointer;font-family:inherit;transition:all .15s}
+  .btn-refresh:hover{border-color:#7c3aed;color:#a78bfa}
+  .table-wrap{overflow-x:auto;border-radius:10px;border:.5px solid #2a2a35;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{background:#13131e;color:#6b7280;font-weight:500;padding:10px 13px;text-align:left;white-space:nowrap;border-bottom:.5px solid #2a2a35}
+  td{padding:10px 13px;border-bottom:.5px solid #1a1a25;color:#e4e4e7;vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#1a1a2a}
+  .tbadge{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:500;white-space:nowrap}
+  .tg{background:#3b0a2a;color:#f472b6}
+  .tb{background:#0f1e4a;color:#60a5fa}
+  .ta{background:#2e1f5e;color:#a78bfa}
+  .trole{background:#1c1c27;color:#9ca3af;border:.5px solid #3a3a4a;font-size:11px;padding:2px 8px;border-radius:6px}
+  .tmsg{max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#9ca3af}
+  .ttime{color:#6b7280;white-space:nowrap;font-size:11px}
+  .del-btn{background:transparent;border:.5px solid #3a3a4a;color:#6b7280;border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer;transition:all .15s;font-family:inherit}
+  .del-btn:hover{border-color:#7f1d1d;color:#fca5a5;background:#2d0a0a}
+  .empty-state{text-align:center;padding:2.5rem;color:#6b7280}
 </style>
+</head>
+<body>
 
-<div>
-  <nav class="navbar">
-    <div class="logo" onclick="gotoPage('all')">🏠 HostelFind</div>
-    <div class="nav-links">
-      <button class="nav-btn active" id="btn-all" onclick="gotoPage('all')">All</button>
-      <button class="nav-btn" id="btn-girls" onclick="gotoPage('girls')">Girls</button>
-      <button class="nav-btn" id="btn-boys" onclick="gotoPage('boys')">Boys</button>
-      <button class="nav-btn" id="btn-contact" onclick="gotoPage('contact')">Contact</button>
-      <button class="nav-btn admin-btn" id="btn-admin" onclick="gotoPage('admin')">⚙ Admin</button>
-    </div>
-  </nav>
+<nav class="navbar">
+  <div class="logo" onclick="gotoPage('all')">🏠 HostelFind</div>
+  <div class="nav-links">
+    <button class="nav-btn active" id="btn-all" onclick="gotoPage('all')">All</button>
+    <button class="nav-btn" id="btn-girls" onclick="gotoPage('girls')">Girls</button>
+    <button class="nav-btn" id="btn-boys" onclick="gotoPage('boys')">Boys</button>
+    <button class="nav-btn" id="btn-contact" onclick="gotoPage('contact')">Contact</button>
+    <button class="nav-btn admin-btn" id="btn-admin" onclick="gotoPage('admin')">⚙ Admin</button>
+  </div>
+</nav>
 
-  <!-- ALL -->
-  <div id="page-all">
-    <div class="hero">
-      <h1>Find your hostel in <span style="color:#a78bfa">Greater Noida</span></h1>
-      <p>Affordable, safe, and convenient stays near your campus</p>
-      <div class="city-pill">📍 Greater Noida, Uttar Pradesh</div>
-      <div class="search-bar"><input id="sAll" type="text" placeholder="Search by name, area..."
-          oninput="fAll()" /><button class="btn-primary" onclick="fAll()">Search</button></div>
-    </div>
-    <div class="filters-bar">
-      <span>Filter:</span>
-      <select id="aAll" onchange="fAll()">
-        <option value="">All areas</option>
-        <option>Knowledge Park I</option>
-        <option>Knowledge Park III</option>
-        <option>Alpha 1</option>
-        <option>Pari Chowk</option>
-      </select>
-      <select id="pAll" onchange="fAll()">
-        <option value="">Any budget</option>
-        <option value="low">Under ₹5,000</option>
-        <option value="mid">₹5,000–₹9,000</option>
-        <option value="high">₹9,000+</option>
-      </select>
-      <div class="tag active" id="taw" onclick="tg(this,'WiFi','all')">WiFi</div>
-      <div class="tag" id="tam" onclick="tg(this,'Meals','all')">Meals</div>
-      <div class="tag" id="taa" onclick="tg(this,'AC','all')">AC</div>
-      <div class="tag" id="tal" onclick="tg(this,'Laundry','all')">Laundry</div>
-    </div>
-    <div class="listings">
-      <div class="listings-header">
-        <h2>All hostels in Greater Noida</h2><span id="cnt-all">—</span>
-      </div>
-      <div id="no-all" class="no-results hidden">No hostels match your filters.</div>
-      <div class="card-grid" id="grid-all"></div>
+<!-- ALL -->
+<div id="page-all">
+  <div class="hero">
+    <h1>Find your hostel in <span style="color:#a78bfa">Greater Noida</span></h1>
+    <p>Affordable, safe, and convenient stays near your campus</p>
+    <div class="city-pill">📍 Greater Noida, Uttar Pradesh</div>
+    <div class="search-bar">
+      <input id="sAll" type="text" placeholder="Search by name, area..." oninput="fAll()"/>
+      <button class="btn-primary" onclick="fAll()">Search</button>
     </div>
   </div>
-
-  <!-- GIRLS -->
-  <div id="page-girls" class="hidden">
-    <div class="hero" style="background:linear-gradient(135deg,#1a0a14 0%,#0f1117 60%)">
-      <h1>Safe stays for <span style="color:#f472b6">girls</span> in Greater Noida</h1>
-      <p>Verified, secure hostels exclusively for women students</p>
-      <div class="city-pill" style="color:#f472b6;border-color:#be185d;">📍 Greater Noida, Uttar Pradesh</div>
-      <div class="search-bar"><input id="sGirls" type="text" placeholder="Search girls hostels..."
-          oninput="fGirls()" /><button class="btn-pink" onclick="fGirls()">Search</button></div>
-    </div>
-    <div class="filters-bar">
-      <span>Filter:</span>
-      <select id="aGirls" onchange="fGirls()">
-        <option value="">All areas</option>
-        <option>Knowledge Park I</option>
-        <option>Knowledge Park III</option>
-        <option>Alpha 1</option>
-        <option>Pari Chowk</option>
-      </select>
-      <select id="pGirls" onchange="fGirls()">
-        <option value="">Any budget</option>
-        <option value="low">Under ₹5,000</option>
-        <option value="mid">₹5,000–₹9,000</option>
-        <option value="high">₹9,000+</option>
-      </select>
-      <div class="tag pink active" id="tgw" onclick="tg(this,'WiFi','girls')">WiFi</div>
-      <div class="tag pink" id="tgm" onclick="tg(this,'Meals','girls')">Meals</div>
-      <div class="tag pink" id="tga" onclick="tg(this,'AC','girls')">AC</div>
-      <div class="tag pink" id="tgc" onclick="tg(this,'CCTV','girls')">CCTV</div>
-    </div>
-    <div class="listings">
-      <div class="listings-header">
-        <h2>Girls only hostels <span class="section-badge badge-girls">Women only</span></h2><span
-          id="cnt-girls">—</span>
-      </div>
-      <div id="no-girls" class="no-results hidden">No hostels match.</div>
-      <div class="card-grid" id="grid-girls"></div>
-    </div>
+  <div class="filters-bar">
+    <span>Filter:</span>
+    <select id="aAll" onchange="fAll()">
+      <option value="">All areas</option>
+      <option>Knowledge Park I</option>
+      <option>Knowledge Park III</option>
+      <option>Alpha 1</option>
+      <option>Pari Chowk</option>
+    </select>
+    <select id="pAll" onchange="fAll()">
+      <option value="">Any budget</option>
+      <option value="low">Under ₹5,000</option>
+      <option value="mid">₹5,000–₹9,000</option>
+      <option value="high">₹9,000+</option>
+    </select>
+    <div class="tag" id="taw" onclick="tg(this,'WiFi','all')">WiFi</div>
+    <div class="tag" id="tam" onclick="tg(this,'Meals','all')">Meals</div>
+    <div class="tag" id="taa" onclick="tg(this,'AC','all')">AC</div>
+    <div class="tag" id="tal" onclick="tg(this,'Laundry','all')">Laundry</div>
   </div>
-
-  <!-- BOYS -->
-  <div id="page-boys" class="hidden">
-    <div class="hero" style="background:linear-gradient(135deg,#050f1e 0%,#0f1117 60%)">
-      <h1>Great stays for <span style="color:#60a5fa">boys</span> in Greater Noida</h1>
-      <p>Affordable, well-connected hostels exclusively for male students</p>
-      <div class="city-pill" style="color:#60a5fa;border-color:#1d4ed8;">📍 Greater Noida, Uttar Pradesh</div>
-      <div class="search-bar"><input id="sBoys" type="text" placeholder="Search boys hostels..."
-          oninput="fBoys()" /><button class="btn-blue" onclick="fBoys()">Search</button></div>
+  <div class="listings">
+    <div class="listings-header">
+      <h2>All hostels in Greater Noida</h2><span id="cnt-all">—</span>
     </div>
-    <div class="filters-bar">
-      <span>Filter:</span>
-      <select id="aBoys" onchange="fBoys()">
-        <option value="">All areas</option>
-        <option>Knowledge Park I</option>
-        <option>Knowledge Park III</option>
-      </select>
-      <select id="pBoys" onchange="fBoys()">
-        <option value="">Any budget</option>
-        <option value="low">Under ₹5,000</option>
-        <option value="mid">₹5,000–₹9,000</option>
-        <option value="high">₹9,000+</option>
-      </select>
-      <div class="tag blue active" id="tbw" onclick="tg(this,'WiFi','boys')">WiFi</div>
-      <div class="tag blue" id="tbm" onclick="tg(this,'Meals','boys')">Meals</div>
-      <div class="tag blue" id="tba" onclick="tg(this,'AC','boys')">AC</div>
-      <div class="tag blue" id="tbg" onclick="tg(this,'Gym','boys')">Gym</div>
-    </div>
-    <div class="listings">
-      <div class="listings-header">
-        <h2>Boys only hostels <span class="section-badge badge-boys">Men only</span></h2><span id="cnt-boys">—</span>
-      </div>
-      <div id="no-boys" class="no-results hidden">No hostels match.</div>
-      <div class="card-grid" id="grid-boys"></div>
-    </div>
+    <div id="no-all" class="no-results hidden">No hostels match your filters.</div>
+    <div class="card-grid" id="grid-all"></div>
   </div>
-
-  <!-- CONTACT -->
-  <div id="page-contact" class="hidden">
-    <div class="contact-wrap">
-      <div class="contact-inner">
-        <h2>Contact & enquire</h2>
-        <p>Fill in your details and we'll get back to you within 24 hours.</p>
-
-        <div id="fb-status" class="firebase-status">
-          <div class="dot dot-amber" id="fb-dot"></div>
-          <span id="fb-status-text">Connecting to database...</span>
-        </div>
-
-        <div id="contact-error" class="alert alert-error hidden"></div>
-        <div id="contact-success" class="alert alert-success hidden">
-          <h3>✓ Message sent!</h3>
-          <p>Thanks for reaching out. We'll get back to you soon.</p>
-          <button onclick="resetContactForm()"
-            style="margin-top:10px;background:transparent;border:0.5px solid #166534;color:#4ade80;border-radius:8px;padding:7px 16px;font-size:13px;cursor:pointer;font-family:var(--font-sans)">Send
-            another →</button>
-        </div>
-
-        <div id="contact-form">
-          <div class="form-row">
-            <div class="form-group"><label>Full name *</label><input id="fn" type="text" placeholder="Rahul Sharma" />
-              <div class="err-msg hidden" id="fn-err">Name is required</div>
-            </div>
-            <div class="form-group"><label>Email *</label><input id="fe" type="email" placeholder="you@email.com" />
-              <div class="err-msg hidden" id="fe-err">Valid email required</div>
-            </div>
-          </div>
-          <div class="form-group"><label>Phone number *</label><input id="fp" type="tel"
-              placeholder="+91 98765 43210" />
-            <div class="err-msg hidden" id="fp-err">Phone is required</div>
-          </div>
-          <div class="form-group"><label>I am a...</label>
-            <select id="fr">
-              <option>Student looking for a hostel</option>
-              <option>Hostel owner / PG owner</option>
-              <option>Parent enquiring for a student</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Looking for</label>
-              <select id="fl">
-                <option>Girls hostel</option>
-                <option>Boys hostel</option>
-                <option>Any</option>
-              </select>
-            </div>
-            <div class="form-group"><label>Preferred area</label>
-              <select id="fa">
-                <option>Any area</option>
-                <option>Knowledge Park I</option>
-                <option>Knowledge Park III</option>
-                <option>Alpha 1</option>
-                <option>Pari Chowk</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group"><label>Message</label><textarea id="fm"
-              placeholder="Budget, college name, preferred amenities..."></textarea></div>
-          <button class="btn-submit" id="sbtn" onclick="submitForm()">Send message</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DETAIL -->
-  <div id="page-detail" class="hidden detail-page">
-    <div id="detail-content"></div>
-  </div>
-
-  <!-- ADMIN -->
-  <div id="page-admin" class="hidden">
-    <div class="admin-wrap">
-      <div class="admin-top">
-        <div>
-          <h2>⚙ Enquiries dashboard</h2>
-          <p>All contact form submissions from Firebase</p>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn-refresh" onclick="loadAdmin()">↻ Refresh</button>
-          <button class="btn-danger" onclick="confirmClearAll()">🗑 Clear all</button>
-        </div>
-      </div>
-
-      <div id="admin-fb-status" class="firebase-status" style="margin-bottom:1rem">
-        <div class="dot dot-amber" id="adb-dot"></div>
-        <span id="adb-status-text">Checking Firebase...</span>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat">
-          <div class="stat-label">Total</div>
-          <div class="stat-val" id="st-total">—</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Girls requests</div>
-          <div class="stat-val" id="st-girls">—</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Boys requests</div>
-          <div class="stat-val" id="st-boys">—</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Owner listings</div>
-          <div class="stat-val" id="st-owners">—</div>
-        </div>
-      </div>
-
-      <div class="admin-bar">
-        <input id="adm-search" type="text" placeholder="Search by name, email, phone..." oninput="renderTable()" />
-        <select id="adm-type" onchange="renderTable()" style="font-size:13px">
-          <option value="">All types</option>
-          <option>Girls hostel</option>
-          <option>Boys hostel</option>
-          <option>Any</option>
-        </select>
-        <select id="adm-role" onchange="renderTable()" style="font-size:13px">
-          <option value="">All roles</option>
-          <option value="Student">Student</option>
-          <option value="Hostel owner">Owner</option>
-          <option value="Parent">Parent</option>
-        </select>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Looking for</th>
-              <th>Area</th>
-              <th>Message</th>
-              <th>Submitted</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="adm-tbody">
-            <tr>
-              <td colspan="10">
-                <div class="empty-state">Loading...</div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Firebase Setup Banner (shown when not configured) -->
-  <div id="setup-banner" class="hidden">
-    <div class="setup-banner" style="margin:2rem">
-      <h3>🔥 Firebase setup required</h3>
-      <p>To save enquiries to Firebase, enter your Firebase Web API Key and Project ID below. You can find these in your
-        <strong>Firebase Console → Project Settings → General → Your apps → Web app</strong>.
-      </p>
-      <p style="margin-top:6px">Also make sure your Firestore Database is created and rules allow writes (start in
-        <strong>test mode</strong> for now).
-      </p>
-      <div class="setup-form">
-        <input id="setup-apikey" type="text" placeholder="Firebase API Key (AIzaSy...)" />
-        <input id="setup-projectid" type="text" placeholder="Project ID (e.g. hostelfind-abc12)" />
-        <button class="btn-setup" onclick="saveFirebaseConfig()">Save & connect</button>
-      </div>
-      <p style="margin-top:10px;font-size:12px;color:#fde68a">Settings are saved in your browser and used only to
-        connect to your own Firebase project.</p>
-    </div>
-  </div>
-
-  <div class="footer">© 2026 HostelFind · Greater Noida's trusted student hostel directory</div>
 </div>
 
+<!-- GIRLS -->
+<div id="page-girls" class="hidden">
+  <div class="hero" style="background:linear-gradient(135deg,#1a0a14 0%,#0f1117 60%)">
+    <h1>Safe stays for <span style="color:#f472b6">girls</span> in Greater Noida</h1>
+    <p>Verified, secure hostels exclusively for women students</p>
+    <div class="city-pill" style="color:#f472b6;border-color:#be185d;">📍 Greater Noida, Uttar Pradesh</div>
+    <div class="search-bar">
+      <input id="sGirls" type="text" placeholder="Search girls hostels..." oninput="fGirls()"/>
+      <button class="btn-pink" onclick="fGirls()">Search</button>
+    </div>
+  </div>
+  <div class="filters-bar">
+    <span>Filter:</span>
+    <select id="aGirls" onchange="fGirls()">
+      <option value="">All areas</option>
+      <option>Knowledge Park I</option>
+      <option>Knowledge Park III</option>
+      <option>Alpha 1</option>
+      <option>Pari Chowk</option>
+    </select>
+    <select id="pGirls" onchange="fGirls()">
+      <option value="">Any budget</option>
+      <option value="low">Under ₹5,000</option>
+      <option value="mid">₹5,000–₹9,000</option>
+      <option value="high">₹9,000+</option>
+    </select>
+    <div class="tag pink" id="tgw" onclick="tg(this,'WiFi','girls')">WiFi</div>
+    <div class="tag pink" id="tgm" onclick="tg(this,'Meals','girls')">Meals</div>
+    <div class="tag pink" id="tga" onclick="tg(this,'AC','girls')">AC</div>
+    <div class="tag pink" id="tgc" onclick="tg(this,'CCTV','girls')">CCTV</div>
+  </div>
+  <div class="listings">
+    <div class="listings-header">
+      <h2>Girls only hostels <span class="section-badge badge-girls">Women only</span></h2>
+      <span id="cnt-girls">—</span>
+    </div>
+    <div id="no-girls" class="no-results hidden">No hostels match.</div>
+    <div class="card-grid" id="grid-girls"></div>
+  </div>
+</div>
+
+<!-- BOYS -->
+<div id="page-boys" class="hidden">
+  <div class="hero" style="background:linear-gradient(135deg,#050f1e 0%,#0f1117 60%)">
+    <h1>Great stays for <span style="color:#60a5fa">boys</span> in Greater Noida</h1>
+    <p>Affordable, well-connected hostels exclusively for male students</p>
+    <div class="city-pill" style="color:#60a5fa;border-color:#1d4ed8;">📍 Greater Noida, Uttar Pradesh</div>
+    <div class="search-bar">
+      <input id="sBoys" type="text" placeholder="Search boys hostels..." oninput="fBoys()"/>
+      <button class="btn-blue" onclick="fBoys()">Search</button>
+    </div>
+  </div>
+  <div class="filters-bar">
+    <span>Filter:</span>
+    <select id="aBoys" onchange="fBoys()">
+      <option value="">All areas</option>
+      <option>Knowledge Park I</option>
+      <option>Knowledge Park III</option>
+    </select>
+    <select id="pBoys" onchange="fBoys()">
+      <option value="">Any budget</option>
+      <option value="low">Under ₹5,000</option>
+      <option value="mid">₹5,000–₹9,000</option>
+      <option value="high">₹9,000+</option>
+    </select>
+    <div class="tag blue" id="tbw" onclick="tg(this,'WiFi','boys')">WiFi</div>
+    <div class="tag blue" id="tbm" onclick="tg(this,'Meals','boys')">Meals</div>
+    <div class="tag blue" id="tba" onclick="tg(this,'AC','boys')">AC</div>
+    <div class="tag blue" id="tbg" onclick="tg(this,'Gym','boys')">Gym</div>
+  </div>
+  <div class="listings">
+    <div class="listings-header">
+      <h2>Boys only hostels <span class="section-badge badge-boys">Men only</span></h2>
+      <span id="cnt-boys">—</span>
+    </div>
+    <div id="no-boys" class="no-results hidden">No hostels match.</div>
+    <div class="card-grid" id="grid-boys"></div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div id="page-contact" class="hidden">
+  <div class="contact-wrap">
+    <div class="contact-inner">
+      <h2>Contact & enquire</h2>
+      <p>Fill in your details and we'll get back to you within 24 hours.</p>
+      <div id="fb-status" class="firebase-status">
+        <div class="dot dot-amber" id="fb-dot"></div>
+        <span id="fb-status-text">Connecting to database...</span>
+      </div>
+      <div id="contact-error" class="alert alert-error hidden"></div>
+      <div id="contact-success" class="alert alert-success hidden">
+        <h3>✓ Message sent!</h3>
+        <p>Thanks for reaching out. We'll get back to you soon.</p>
+        <button onclick="resetContactForm()" style="margin-top:10px;background:transparent;border:.5px solid #166534;color:#4ade80;border-radius:8px;padding:7px 16px;font-size:13px;cursor:pointer;font-family:inherit">Send another →</button>
+      </div>
+      <div id="contact-form">
+        <div class="form-row">
+          <div class="form-group"><label>Full name *</label><input id="fn" type="text" placeholder="Rahul Sharma"/><div class="err-msg hidden" id="fn-err">Name is required</div></div>
+          <div class="form-group"><label>Email *</label><input id="fe" type="email" placeholder="you@email.com"/><div class="err-msg hidden" id="fe-err">Valid email required</div></div>
+        </div>
+        <div class="form-group"><label>Phone number *</label><input id="fp" type="tel" placeholder="+91 98765 43210"/><div class="err-msg hidden" id="fp-err">Phone is required</div></div>
+        <div class="form-group"><label>I am a...</label>
+          <select id="fr">
+            <option>Student looking for a hostel</option>
+            <option>Hostel owner / PG owner</option>
+            <option>Parent enquiring for a student</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Looking for</label>
+            <select id="fl"><option>Girls hostel</option><option>Boys hostel</option><option>Any</option></select>
+          </div>
+          <div class="form-group"><label>Preferred area</label>
+            <select id="fa"><option>Any area</option><option>Knowledge Park I</option><option>Knowledge Park III</option><option>Alpha 1</option><option>Pari Chowk</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label>Message</label><textarea id="fm" placeholder="Budget, college name, preferred amenities..."></textarea></div>
+        <button class="btn-submit" id="sbtn" onclick="submitForm()">Send message</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div id="page-detail" class="hidden detail-page">
+  <div id="detail-content"></div>
+</div>
+
+<!-- ADMIN -->
+<div id="page-admin" class="hidden">
+  <div class="admin-wrap">
+    <div class="admin-top">
+      <div><h2>⚙ Enquiries dashboard</h2><p>All contact form submissions from Firebase</p></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-refresh" onclick="loadAdmin()">↻ Refresh</button>
+        <button class="btn-danger" onclick="confirmClearAll()">🗑 Clear all</button>
+      </div>
+    </div>
+    <div id="admin-fb-status" class="firebase-status" style="margin-bottom:1rem">
+      <div class="dot dot-amber" id="adb-dot"></div>
+      <span id="adb-status-text">Checking Firebase...</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label">Total</div><div class="stat-val" id="st-total">—</div></div>
+      <div class="stat"><div class="stat-label">Girls requests</div><div class="stat-val" id="st-girls">—</div></div>
+      <div class="stat"><div class="stat-label">Boys requests</div><div class="stat-val" id="st-boys">—</div></div>
+      <div class="stat"><div class="stat-label">Owner listings</div><div class="stat-val" id="st-owners">—</div></div>
+    </div>
+    <div class="admin-bar">
+      <input id="adm-search" type="text" placeholder="Search by name, email, phone..." oninput="renderTable()"/>
+      <select id="adm-type" onchange="renderTable()" style="font-size:13px">
+        <option value="">All types</option><option>Girls hostel</option><option>Boys hostel</option><option>Any</option>
+      </select>
+      <select id="adm-role" onchange="renderTable()" style="font-size:13px">
+        <option value="">All roles</option><option value="Student">Student</option><option value="Hostel owner">Owner</option><option value="Parent">Parent</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>Role</th><th>Looking for</th><th>Area</th><th>Message</th><th>Submitted</th><th></th></tr>
+        </thead>
+        <tbody id="adm-tbody">
+          <tr><td colspan="10"><div class="empty-state">Loading...</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase Setup Banner -->
+<div id="setup-banner" class="hidden">
+  <div class="setup-banner" style="margin:1rem">
+    <h3>🔥 Firebase setup required</h3>
+    <p>To save enquiries to Firebase, enter your Firebase Web API Key and Project ID below.</p>
+    <div class="setup-form">
+      <input id="setup-apikey" type="text" placeholder="Firebase API Key (AIzaSy...)"/>
+      <input id="setup-projectid" type="text" placeholder="Project ID (e.g. hostelfind-abc12)"/>
+      <button class="btn-setup" onclick="saveFirebaseConfig()">Save & connect</button>
+    </div>
+    <p style="margin-top:10px;font-size:12px;color:#fde68a">Settings are saved in your browser and used only to connect to your own Firebase project.</p>
+  </div>
+</div>
+
+<div class="footer">© 2026 HostelFind · Greater Noida's trusted student hostel directory</div>
+
 <script>
+const hostels=[
+  {name:"Pakhi's Nest Girls Hostel",area:"Beta I",loc:"House No. 22, Sector Beta I, Near Ansal Plaza Mall Road, Opposite SBI ATM Lane",price:5200,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:48,img:"https://i.ibb.co/zH78qjT6/pakhi-s-Nest.jpg",gradient:"ig1",desc:"Comfortable and secure girls hostel with homely food, WiFi, and peaceful environment.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM","ID required for guests"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
+  {name:"The Destination Boys Hostel",area:"Knowledge Park II",loc:"Plot 14, Knowledge Park II, Near GL Bajaj Institute Main Gate, Service Road",price:5800,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV","AC"],avail:"Available",rating:"★★★★★",reviews:72,img:"https://i.ibb.co/wrZqySFP/destination.jpg",gradient:"i1",desc:"Premium boys hostel with AC rooms, high-speed WiFi, and biometric entry.",roomTypes:["Single","Double sharing"],rules:["No smoking","Gate closes at 11 PM"],colleges:["GL Bajaj","Sharda University","Galgotias College"]},
+  {name:"Anya Residency For Girls",area:"Delta I",loc:"D-18, Sector Delta I, Near Delta I Metro Station",price:4600,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:39,img:"https://i.ibb.co/0yhJj0ww/anya.jpg",gradient:"ig2",desc:"Affordable and clean girls hostel with spacious rooms, RO water, and daily housekeeping.",roomTypes:["Double sharing","Triple sharing"],rules:["No late entry after 10 PM"],colleges:["IIMT College","Sharda University"]},
+  {name:"Vizima Girls Hostel",area:"Gamma II",loc:"Plot 9, Gamma II Residential Area, Near Knowledge Park Police Chowki",price:5000,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV","AC"],avail:"Available",rating:"★★★★☆",reviews:44,img:"https://i.ibb.co/JVKtxfP/vz-Res.jpg",gradient:"ig3",desc:"Modern girls hostel with AC rooms, attached washrooms, and secure biometric entry.",roomTypes:["Single","Double sharing"],rules:["Visitors allowed in lobby only","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj"]},
+  {name:"Shiv Shakti Homes Boys Hostel",area:"Omega I",loc:"H-12, Sector Omega I, Near Jagat Farm Market",price:4300,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★☆☆",reviews:28,img:"https://i.ibb.co/mC0PXBrY/ssh.jpg",gradient:"i2",desc:"Budget-friendly boys hostel with mess facility, WiFi, and laundry service.",roomTypes:["Double sharing","Triple sharing"],rules:["Gate closes at 11 PM"],colleges:["IIMT College","GL Bajaj"]},
+  {name:"Kaveri Living Boys Hostel",area:"Knowledge Park III",loc:"Campus 2: C/20 A & B, Knowledge Park III & Campus 3, Alpha I",price:5500,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:59,img:"https://i.ibb.co/WvpxHBBb/ig8.jpg",gradient:"i3",desc:"Well-managed boys hostel across two campuses.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No female visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College","Galgotias University"]},
+  {name:"CasaBella Residency For Girls",area:"Knowledge Park III",loc:"C-20, Knowledge Park III, Near Sharda University Gate 2",price:4400,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:65,img:"https://i.ibb.co/GQ5WpYMW/Casa-Bella-Girls.jpg",gradient:"ig4",desc:"Well-maintained girls hostel with biometric entry and quiet study environment.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
+  {name:"Simran Hostel For Girls",area:"Knowledge Park III",loc:"Campus 2: C/20 A & B, Knowledge Park III & Campus 3, Alpha I",price:6400,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:65,img:"https://i.ibb.co/RGQpsNmr/simran.jpg",gradient:"ig5",desc:"A well-established girls hostel across two campuses.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
+  {name:"Siddhi Vinayak Girls Hostel",area:"Knowledge Park III",loc:"Beta 2, Near Metro Station, Greater Noida",price:4800,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:65,img:"https://i.ibb.co/DgffxHcc/siddhi-Vinyak-Girls.jpg",gradient:"ig6",desc:"Premium girls hostel with biometric entry, CCTV security, RO water, and attached washrooms.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
+  {name:"Limewood Girls Hostel",area:"Alpha I",loc:"Plot 12, Alpha I Commercial Belt, Opposite Pari Chowk Metro Station",price:4400,gender:"girls",amenities:["Swimming Pool","WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:65,img:"https://i.ibb.co/tw9Fc3jF/Limewood-Girls.jpg",gradient:"ig1",desc:"Modern girls hostel with spacious rooms, high-speed WiFi, swimming pool, and daily housekeeping.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
+  {name:"Saraswati Nivas Boys Hostel",area:"Gamma II",loc:"Plot 33, Gamma II Residential Area, Near Knowledge Park Police Chowki",price:5100,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:32,img:"https://i.ibb.co/1VZvQYL/Saraswati-Boys.jpg",gradient:"i4",desc:"A well-established boys hostel in a safe residential area.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["Curfew at 10 PM"],colleges:["GNIOT","Sharda University","GL Bajaj","IIMT College"]},
+  {name:"EZ Stays Mandela Mansion",area:"Delta I",loc:"D-22, Sector Delta I, Near Delta I Metro Station",price:6500,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:32,img:"https://i.ibb.co/czdKs37/ez-Mandela.jpg",gradient:"i5",desc:"A well-managed boys hostel near Delta Metro Station with full amenities.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["Curfew at 10 PM"],colleges:["GNIOT","Sharda University","GL Bajaj","IIMT College"]},
+  {name:"Vanya Residency For Girls",area:"Knowledge Park II",loc:"Plot 7, Knowledge Park II, Opposite GL Bajaj Institute",price:4400,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:65,img:"https://i.ibb.co/6J0ZmC4T/Vanya-Residemcy.jpg",gradient:"ig2",desc:"A well-established girls hostel near GL Bajaj.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
+  {name:"Bright Star Boys Hostel",area:"Knowledge Park III",loc:"Plot 5, Knowledge Park III, Near Sharda University Back Gate",price:5000,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:32,img:"https://i.ibb.co/Jwh60vhx/Bright-Star.jpg",gradient:"i6",desc:"A well-established boys hostel near Sharda University back gate.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["Curfew at 10 PM"],colleges:["GNIOT","Sharda University","GL Bajaj","IIMT College"]},
+  {name:"Finix Residency For Girls",area:"Alpha II",loc:"A-Block, Alpha II Residential Area, Near Pari Chowk Metro Station",price:6000,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:54,img:"https://i.ibb.co/PvKjZt2k/Finix-Residency.jpg",gradient:"ig3",desc:"A well-established girls hostel near Pari Chowk Metro Station.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["KCC","Sharda University","GL Bajaj","IIMT College"]},
+  {name:"Moon Boys Hostel",area:"Beta I",loc:"House No. 14, Sector Beta I, Near Ansal Plaza Mall",price:5100,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:58,img:"https://i.ibb.co/MDPW5d3N/Moon-Boys-Hostel.jpg",gradient:"i7",desc:"A well-established boys hostel near Ansal Plaza Mall.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
+  {name:"Shakuntalam Girls Hostel",area:"Omega I",loc:"H-Block, Sector Omega I, Near Jagat Farm Market",price:4800,gender:"girls",amenities:["WiFi","Meals","CCTV"],avail:"Available",rating:"★★★★☆",reviews:59,img:"https://i.ibb.co/xtYb8YgD/Shakuntalam-Girls.jpg",gradient:"ig4",desc:"Budget-friendly girls hostel with homely food and safe surroundings.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
+  {name:"Shivam Boys Hostel",area:"Omega I",loc:"Sector Omega I, Near Jagat Farm Market",price:5500,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:39,img:"https://i.ibb.co/QgQD4ph/Shivam-Boys.jpg",gradient:"i1",desc:"A well-managed boys hostel with good amenities.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No female visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College","Galgotias University"]},
+  {name:"Inayat Girls Hostel",area:"Knowledge Park I",loc:"Plot 9, Knowledge Park I, Near GL Bajaj Back Gate",price:5500,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:48,img:"https://i.ibb.co/7d4ZcjWj/Inayat.jpg",gradient:"ig5",desc:"A well-established girls hostel near GL Bajaj back gate.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College","Galgotias University"]},
+  {name:"Satvik Boys Hostel",area:"Delta II",loc:"D-55, Sector Delta II, Near Delta II Market",price:5500,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:51,img:"https://i.ibb.co/Gb755Hg/Satvik-Boys.jpg",gradient:"i2",desc:"A well-managed boys hostel in Delta II with full amenities.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No female visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College","Galgotias University"]},
+  {name:"Magadh Inn Girls Hostel",area:"Knowledge Park III",loc:"Campus 2: C/20 A & B, Knowledge Park III & Campus 3, Alpha I",price:6000,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:44,img:"https://i.ibb.co/FZVFgzy/magadh.webp",gradient:"ig1",desc:"A well-established girls hostel across two campuses.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
+  {name:"Blue Heaven Girls Hostel",area:"Knowledge Park III",loc:"3A/2, A21, D29, Knowledge Park III, near GL Bajaj & Sharda",price:5500,gender:"girls",amenities:["WiFi","AC","Meals","CCTV","Laundry"],avail:"2 seats left",rating:"★★★★★",reviews:78,img:"https://i.ibb.co/FbrmsNxb/blue-heaven-hostel.webp",gradient:"ig3",desc:"Highest-rated girls hostel in the area with AC rooms, full meals, and 24/7 CCTV.",roomTypes:["Single AC","Double AC","Triple non-AC"],rules:["No male visitors","Biometric entry"],colleges:["GL Bajaj","Sharda University","GNIOT"]},
+  {name:"Anandam Girls Hostel",area:"Knowledge Park III",loc:"35B, Knowledge Park III, Adjacent to Sharda University",price:6500,gender:"girls",amenities:["WiFi","Meals","AC","CCTV"],avail:"3 seats left",rating:"★★★★★",reviews:93,img:"https://i.ibb.co/cWHxd9G/aanandam-girls.webp",gradient:"ig6",desc:"Adjacent to Sharda University — most reviewed and trusted girls hostel in KP3.",roomTypes:["Single AC","Double AC","Triple AC"],rules:["Biometric entry","Curfew at 10 PM"],colleges:["Sharda University","NIET","GNIOT"]},
+  {name:"Homies Hostel",area:"Knowledge Park III",loc:"Plot No. 9-B, Knowledge Park III, Greater Noida - 201308",price:5500,gender:"boys",amenities:["WiFi","AC","Laundry"],avail:"Available",rating:"★★★★★",reviews:61,img:"https://i.ibb.co/DgC9WJQ2/Homies-hostel.webp",gradient:"i2",desc:"Community-driven boys hostel consistently rated 5 stars.",roomTypes:["Double AC","Triple AC"],rules:["Visitor hours: 8AM–9PM","No smoking inside"],colleges:["GL Bajaj","Sharda University","NIET"]},
+  {name:"Paradox Living Hostel",area:"Knowledge Park III",loc:"Knowledge Park III, Greater Noida (near GL Bajaj College)",price:5800,gender:"boys",amenities:["WiFi","AC","Gym"],avail:"Available",rating:"★★★★★",reviews:73,img:"https://i.ibb.co/jvkg01BV/paradox.webp",gradient:"i6",desc:"The only hostel with a dedicated gym — perfect for fitness-focused students.",roomTypes:["Double AC","Triple AC"],rules:["Gym: 5AM–11PM","Visitor hours: 9AM–9PM"],colleges:["GL Bajaj","GNIOT","Sharda University"]},
+  {name:"The Sunrise Hostel",area:"Knowledge Park III",loc:"1A, 29A, Knowledge Park III, Amity University Road",price:6200,gender:"boys",amenities:["WiFi","Meals","Laundry","AC"],avail:"3 seats left",rating:"★★★★☆",reviews:47,img:"https://i.ibb.co/wrPzR4Sk/sunrise-hostel.jpg",gradient:"i6",desc:"Well-equipped hostel near Amity University Road.",roomTypes:["Double AC","Triple AC"],rules:["Visitor hours: 9AM–9PM"],colleges:["GL Bajaj","GNIOT","Sharda University"]},
+  {name:"AB Hostel",area:"Knowledge Park III",loc:"Plot No. 2C/1, Knowledge Park III, Greater Noida - 201310",price:6000,gender:"boys",amenities:["WiFi","Meals","Laundry"],avail:"Available",rating:"★★★★☆",reviews:42,img:"https://i.ibb.co/Dgp2dy5d/a-b-hostel.webp",gradient:"i3",desc:"Reliable boys hostel with meals and laundry in KP3.",roomTypes:["Double sharing","Triple sharing"],rules:["Gate closes at 11 PM"],colleges:["GL Bajaj","Sharda University"]},
+  {name:"Nalanda Living",area:"Knowledge Park III",loc:"Plot No. 25/3A, Besides Inter Globe College, Knowledge Park III - 201308",price:7000,gender:"boys",amenities:["WiFi","AC","Meals","Laundry"],avail:"2 seats left",rating:"★★★★☆",reviews:38,img:"https://i.ibb.co/93cMSb7f/nalanda-living-hostel.webp",gradient:"i4",desc:"Premium AC hostel with full meals and laundry.",roomTypes:["Double AC","Triple AC"],rules:["Gate closes at 11 PM"],colleges:["GL Bajaj","Sharda University","GNIOT"]},
+  {name:"Annapurna Boys Hostel",area:"Knowledge Park III",loc:"C-26, Greater Noida - 201310",price:4800,gender:"boys",amenities:["WiFi","Meals"],avail:"Available",rating:"★★★☆☆",reviews:24,img:"https://i.ibb.co/GGKn3gj/annapurna-boys-hostel.webp",gradient:"i5",desc:"Budget-friendly hostel with meals included.",roomTypes:["Triple sharing"],rules:["Gate closes at 10 PM"],colleges:["GL Bajaj","GNIOT"]},
+  {name:"Ez Hostel",area:"Knowledge Park I",loc:"Knowledge Park I & III, Greater Noida",price:6500,gender:"boys",amenities:["WiFi","AC","Meals","Laundry"],avail:"Available",rating:"★★★★☆",reviews:55,img:"https://i.ibb.co/ymffqzCK/Ez-boys-hostel.webp",gradient:"i1",desc:"Modern hostel across KP1 and KP3 with full amenities.",roomTypes:["Single AC","Double AC"],rules:["Gate closes at 11 PM"],colleges:["GL Bajaj","Sharda University","GNIOT"]},
+  {name:"Shanti Girls Hostel",area:"Knowledge Park III",loc:"Knowledge Park III, Greater Noida",price:4500,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:38,img:"https://i.ibb.co/MxYvv9Nk/ll.webp",gradient:"ig2",desc:"Peaceful and affordable girls hostel in KP3.",roomTypes:["Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj"]},
+  {name:"Aarav Ladies PG",area:"Alpha 1",loc:"Alpha 1, Greater Noida",price:6500,gender:"girls",amenities:["WiFi","AC","Meals","CCTV"],avail:"2 seats left",rating:"★★★★☆",reviews:52,img:"ig3",gradient:"ig3",desc:"Premium ladies PG with AC rooms and full meals.",roomTypes:["Single AC","Double AC"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj"]},
+  {name:"Sunrise Women Hostel",area:"Beta 2",loc:"Beta 2, Greater Noida",price:7000,gender:"girls",amenities:["WiFi","Meals","CCTV","Laundry"],avail:"Available",rating:"★★★★★",reviews:67,img:"ig4",gradient:"ig4",desc:"Top-rated women hostel with full amenities.",roomTypes:["Single","Double sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
+  {name:"Priya Ladies PG",area:"Gamma 1",loc:"Gamma 1, Greater Noida",price:5500,gender:"girls",amenities:["WiFi","AC","CCTV"],avail:"Available",rating:"★★★☆☆",reviews:21,img:"ig5",gradient:"ig5",desc:"Comfortable ladies PG with AC and CCTV.",roomTypes:["Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj"]},
+  {name:"Savitri Girls Hostel",area:"Knowledge Park I",loc:"Knowledge Park I, Greater Noida",price:4800,gender:"girls",amenities:["WiFi","Laundry","Meals"],avail:"Available",rating:"★★★★☆",reviews:33,img:"https://i.ibb.co/MxYvv9Nk/ll.webp",gradient:"ig6",desc:"Clean and affordable girls hostel near KP1.",roomTypes:["Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["GL Bajaj","IIMT College"]},
+  {name:"Campus Queen PG",area:"Knowledge Park III",loc:"Knowledge Park III, Greater Noida",price:8500,gender:"girls",amenities:["WiFi","AC","Meals","CCTV","Laundry"],avail:"1 seat left",rating:"★★★★★",reviews:89,img:"https://i.ibb.co/cWHxd9G/aanandam-girls.webp",gradient:"ig1",desc:"Premium girls PG with all amenities and top-tier security.",roomTypes:["Single AC","Double AC"],rules:["No male visitors","Biometric entry"],colleges:["Sharda University","GL Bajaj","GNIOT"]}
+];
 
-  /* ── Hostel data ── */
-  /* 
-    IMAGE KEY:
-    - If `img` starts with "http" → treated as a real URL (<img> tag)
-    - If `img` starts with "images/" → treated as local path (shown as gradient fallback in this demo)
-    - Otherwise → CSS gradient class name
-    
-    TO ADD YOUR IMAGES: Upload to ImgBB/Firebase Storage and paste the URL in the `img` field.
-    Example: img:"https://i.ibb.co/abc123/pakhi-nest.jpg"
-  */
-  const hostels = [
-    { name: "Pakhi's Nest Girls Hostel", area: "Beta I", loc: "House No. 22, Sector Beta I, Near Ansal Plaza Mall Road, Opposite SBI ATM Lane", price: 5200, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 48, img: "https://i.ibb.co/zH78qjT6/pakhi-s-Nest.jpg", gradient: "ig1", desc: "Comfortable and secure girls hostel with homely food, WiFi, and peaceful environment.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM", "ID required for guests"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
-    { name: "The Destination Boys Hostel", area: "Knowledge Park II", loc: "Plot 14, Knowledge Park II, Near GL Bajaj Institute Main Gate, Service Road", price: 5800, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV", "AC"], avail: "Available", rating: "★★★★★", reviews: 72, img: "https://i.ibb.co/wrZqySFP/destination.jpg", gradient: "i1", desc: "Premium boys hostel with AC rooms, high-speed WiFi, and biometric entry. Popular among engineering students.", roomTypes: ["Single", "Double sharing"], rules: ["No smoking", "Gate closes at 11 PM"], colleges: ["GL Bajaj", "Sharda University", "Galgotias College"] },
-    { name: "Anya Residency For Girls", area: "Delta I", loc: "D-18, Sector Delta I, Near Delta I Metro Station, Walking Distance from Delta Market", price: 4600, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 39, img: "https://i.ibb.co/0yhJj0ww/anya.jpg", gradient: "ig2", desc: "Affordable and clean girls hostel with spacious rooms, RO water, and daily housekeeping.", roomTypes: ["Double sharing", "Triple sharing"], rules: ["No late entry after 10 PM"], colleges: ["IIMT College", "Sharda University"] },
-    { name: "Vizima Girls Hostel", area: "Gamma II", loc: "Plot 9, Gamma II Residential Area, Near Knowledge Park Police Chowki, Opposite Park", price: 5000, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV", "AC"], avail: "Available", rating: "★★★★☆", reviews: 44, img: "https://i.ibb.co/JVKtxfP/vz-Res.jpg", gradient: "ig3", desc: "Modern girls hostel with AC rooms, attached washrooms, and secure biometric entry.", roomTypes: ["Single", "Double sharing"], rules: ["Visitors allowed in lobby only", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj"] },
-    { name: "Shiv Shakti Homes Boys Hostel", area: "Omega I", loc: "H-12, Sector Omega I, Near Jagat Farm Market, Opposite Community Center", price: 4300, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★☆☆", reviews: 28, img: "https://i.ibb.co/mC0PXBrY/ssh.jpg", gradient: "i2", desc: "Budget-friendly boys hostel with mess facility, WiFi, and laundry service.", roomTypes: ["Double sharing", "Triple sharing"], rules: ["Gate closes at 11 PM"], colleges: ["IIMT College", "GL Bajaj"] },
-    { name: "Kaveri Living Boys Hostel", area: "Knowledge Park III", loc: "Campus 2: C/20 A & B, Knowledge Park III & Campus 3, Alpha I", price: 5500, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 59, img: "https://i.ibb.co/WvpxHBBb/ig8.jpg", gradient: "i3", desc: "Well-managed boys hostel across two campuses, known for cleanliness and attentive staff.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No female visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College", "Galgotias University"] },
-    { name: "CasaBella Residency For Girls", area: "Knowledge Park III", loc: "C-20, Knowledge Park III, Near Sharda University Gate 2", price: 4400, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 65, img: "https://i.ibb.co/GQ5WpYMW/Casa-Bella-Girls.jpg", gradient: "ig4", desc: "Well-maintained girls hostel with biometric entry and quiet study environment. Popular among Sharda and GL Bajaj students.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
-    { name: "Simran Hostel For Girls", area: "Knowledge Park III", loc: "Campus 2: C/20 A & B, Knowledge Park III & Campus 3, Alpha I", price: 6400, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 65, img: "https://i.ibb.co/RGQpsNmr/simran.jpg", gradient: "ig5", desc: "A well-established girls hostel across two campuses, known for cleanliness and attentive staff.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
-    { name: "Siddhi Vinayak Girls Hostel", area: "Knowledge Park III", loc: "Beta 2, Near Metro Station, Greater Noida", price: 4800, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 65, img: "https://i.ibb.co/DgffxHcc/siddhi-Vinyak-Girls.jpg", gradient: "ig6", desc: "Premium girls hostel with biometric entry, CCTV security, RO water, and attached washrooms.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
-    { name: "Limewood Girls Hostel", area: "Alpha I", loc: "Plot 12, Alpha I Commercial Belt, Opposite Pari Chowk Metro Station, Near MSX Mall", price: 4400, gender: "girls", amenities: ["Swimming Pool", "WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 65, img: "https://i.ibb.co/tw9Fc3jF/Limewood-Girls.jpg", gradient: "ig1", desc: "Modern girls hostel with spacious rooms, high-speed WiFi, swimming pool, and daily housekeeping.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
-    { name: "Saraswati Nivas Boys Hostel", area: "Gamma II", loc: "Plot 33, Gamma II Residential Area, Near Knowledge Park Police Chowki", price: 5100, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 32, img: "https://i.ibb.co/1VZvQYL/Saraswati-Boys.jpg", gradient: "i4", desc: "A well-established boys hostel in a safe residential area with good amenities.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["Curfew at 10 PM"], colleges: ["GNIOT", "Sharda University", "GL Bajaj", "IIMT College"] },
-    { name: "EZ Stays Mandela Mansion", area: "Delta I", loc: "D-22, Sector Delta I, Near Delta I Metro Station, Walking distance from Delta Market", price: 6500, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 32, img: "https://i.ibb.co/czdKs37/ez-Mandela.jpg", gradient: "i5", desc: "A well-managed boys hostel near Delta Metro Station with full amenities.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["Curfew at 10 PM"], colleges: ["GNIOT", "Sharda University", "GL Bajaj", "IIMT College"] },
-    { name: "Vanya Residency For Girls", area: "Knowledge Park II", loc: "Plot 7, Knowledge Park II, Opposite GL Bajaj Institute, Service Lane Road", price: 4400, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 65, img: "https://i.ibb.co/6J0ZmC4T/Vanya-Residemcy.jpg", gradient: "ig2", desc: "A well-established girls hostel near GL Bajaj, known for cleanliness and attentive staff.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
-    { name: "Bright Star Boys Hostel", area: "Knowledge Park III", loc: "Plot 5, Knowledge Park III, Near Sharda University Back Gate, Behind Petrol Pump", price: 5000, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 32, img: "https://i.ibb.co/Jwh60vhx/Bright-Star.jpg", gradient: "i6", desc: "A well-established boys hostel near Sharda University back gate.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["Curfew at 10 PM"], colleges: ["GNIOT", "Sharda University", "GL Bajaj", "IIMT College"] },
-    { name: "Finix Residency For Girls", area: "Alpha II", loc: "A-Block, Alpha II Residential Area, Near Pari Chowk Metro Station and Ansal Plaza", price: 6000, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 54, img: "https://i.ibb.co/PvKjZt2k/Finix-Residency.jpg", gradient: "ig3", desc: "A well-established girls hostel near Pari Chowk Metro Station.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["KCC", "Sharda University", "GL Bajaj", "IIMT College"] },
-    { name: "Moon Boys Hostel", area: "Beta I", loc: "House No. 14, Sector Beta I, Near Ansal Plaza Mall, Adjacent to SBI Bank Lane", price: 5100, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 58, img: "https://i.ibb.co/MDPW5d3N/Moon-Boys-Hostel.jpg", gradient: "i7", desc: "A well-established boys hostel near Ansal Plaza Mall.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
-    { name: "Shakuntalam Girls Hostel", area: "Omega I", loc: "H-Block, Sector Omega I, Near Jagat Farm Market, Behind HDFC Bank Lane", price: 4800, gender: "girls", amenities: ["WiFi", "Meals", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 59, img: "https://i.ibb.co/xtYb8YgD/Shakuntalam-Girls.jpg", gradient: "ig4", desc: "Budget-friendly girls hostel with homely food and safe surroundings.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
-    { name: "Shivam Boys Hostel", area: "Omega I", loc: "Sector Omega I, Near Jagat Farm Market, Opposite Community Center", price: 5500, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 39, img: "https://i.ibb.co/QgQD4ph/Shivam-Boys.jpg", gradient: "i1", desc: "A well-managed boys hostel with good amenities and community atmosphere.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No female visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College", "Galgotias University"] },
-    { name: "Inayat Girls Hostel", area: "Knowledge Park I", loc: "Plot 9, Knowledge Park I, Near GL Bajaj Back Gate, Service Road Side", price: 5500, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 48, img: "https://i.ibb.co/7d4ZcjWj/Inayat.jpg", gradient: "ig5", desc: "A well-established girls hostel near GL Bajaj back gate.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No female visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College", "Galgotias University"] },
-    { name: "Satvik Boys Hostel", area: "Delta II", loc: "D-55, Sector Delta II, Near Delta II Market and Community Park", price: 5500, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 51, img: "https://i.ibb.co/Gb755Hg/Satvik-Boys.jpg", gradient: "i2", desc: "A well-managed boys hostel in Delta II with full amenities.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No female visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College", "Galgotias University"] },
-    { name: "Magadh Inn Girls Hostel", area: "Knowledge Park III", loc: "Campus 2: C/20 A & B, Knowledge Park III & Campus 3, Alpha I", price: 6000, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 44, img: "https://i.ibb.co/FZVFgzy/magadh.webp", gradient: "ig1", desc: "A well-established girls hostel across two campuses, known for cleanliness and attentive staff.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
-    { name: "Blue Heaven Girls Hostel", area: "Knowledge Park III", loc: "3A/2, A21, D29, Knowledge Park III, near GL Bajaj & Sharda", price: 5500, gender: "girls", amenities: ["WiFi", "AC", "Meals", "CCTV", "Laundry"], avail: "2 seats left", rating: "★★★★★", reviews: 78, img: "https://i.ibb.co/FbrmsNxb/blue-heaven-hostel.webp", gradient: "ig3", desc: "Highest-rated girls hostel in the area with AC rooms, full meals, and 24/7 CCTV.", roomTypes: ["Single AC", "Double AC", "Triple non-AC"], rules: ["No male visitors", "Biometric entry"], colleges: ["GL Bajaj", "Sharda University", "GNIOT"] },
-    { name: "Anandam Girls Hostel", area: "Knowledge Park III", loc: "35B, Knowledge Park III, Adjacent to Sharda University", price: 6500, gender: "girls", amenities: ["WiFi", "Meals", "AC", "CCTV"], avail: "3 seats left", rating: "★★★★★", reviews: 93, img: "https://i.ibb.co/cWHxd9G/aanandam-girls.webp", gradient: "ig6", desc: "Adjacent to Sharda University — most reviewed and trusted girls hostel in KP3.", roomTypes: ["Single AC", "Double AC", "Triple AC"], rules: ["Biometric entry", "Curfew at 10 PM"], colleges: ["Sharda University", "NIET", "GNIOT"] },
-    { name: "Homies Hostel", area: "Knowledge Park III", loc: "Plot No. 9-B, Knowledge Park III, Greater Noida - 201308", price: 5500, gender: "boys", amenities: ["WiFi", "AC", "Laundry"], avail: "Available", rating: "★★★★★", reviews: 61, img: "https://i.ibb.co/DgC9WJQ2/Homies-hostel.webp", gradient: "i2", desc: "Community-driven boys hostel consistently rated 5 stars for great atmosphere.", roomTypes: ["Double AC", "Triple AC"], rules: ["Visitor hours: 8AM–9PM", "No smoking inside"], colleges: ["GL Bajaj", "Sharda University", "NIET"] },
-    { name: "Paradox Living Hostel", area: "Knowledge Park III", loc: "Knowledge Park III, Greater Noida (near GL Bajaj College)", price: 5800, gender: "boys", amenities: ["WiFi", "AC", "Gym"], avail: "Available", rating: "★★★★★", reviews: 73, img: "https://i.ibb.co/jvkg01BV/paradox.webp", gradient: "i6", desc: "The only hostel with a dedicated gym — perfect for fitness-focused students.", roomTypes: ["Double AC", "Triple AC"], rules: ["Gym: 5AM–11PM", "Visitor hours: 9AM–9PM"], colleges: ["GL Bajaj", "GNIOT", "Sharda University"] },
+let imgOverrides={};
+try{const s=localStorage.getItem('hf_imgs');if(s)imgOverrides=JSON.parse(s);}catch(e){}
 
-    { name: "The Sunrise Hostel", area: "Knowledge Park III", loc: "1A, 29A, Knowledge Park III, Amity University Road, Surajpur Site 5 - 201310", price: 6200, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "AC"], avail: "3 seats left", rating: "★★★★☆", reviews: 47, img: "https://i.ibb.co/wrPzR4Sk/sunrise-hostel.jpg", gradient: "i6", desc: "The only hostel with a dedicated gym — perfect for fitness-focused students.", roomTypes: ["Double AC", "Triple AC"], rules: ["Gym: 5AM–11PM", "Visitor hours: 9AM–9PM"], colleges: ["GL Bajaj", "GNIOT", "Sharda University"] },
-    { name: "AB Hostel", area: "Knowledge Park III", loc: "Plot No. 2C/1, Knowledge Park III, Greater Noida - 201310", price: 6000, gender: "boys", amenities: ["WiFi", "Meals", "Laundry"], avail: "Available", rating: "★★★★☆", reviews: 42, img: "https://i.ibb.co/Dgp2dy5d/a-b-hostel.webp" },
-    // { name: "Homies Hostel", area: "Knowledge Park III", loc: "Plot No. 9-B, Knowledge Park III, Greater Noida - 201308", price: 5500, gender: "boys", amenities: ["WiFi", "AC", "Laundry"], avail: "Available", rating: "★★★★★", reviews: 61, img: "i2" },
-    { name: "Nalanda Living", area: "Knowledge Park III", loc: "Plot No. 25/3A, Besides Inter Globe College, Knowledge Park III - 201308", price: 7000, gender: "boys", amenities: ["WiFi", "AC", "Meals", "Laundry"], avail: "2 seats left", rating: "★★★★☆", reviews: 38, img: "https://i.ibb.co/93cMSb7f/nalanda-living-hostel.webp" },
-    { name: "Annapurna Boys Hostel", area: "Knowledge Park III", loc: "C-26, Greater Noida - 201310", price: 4800, gender: "boys", amenities: ["WiFi", "Meals"], avail: "Available", rating: "★★★☆☆", reviews: 24, img: "https://i.ibb.co/GGKn3gj/annapurna-boys-hostel.webp" },
-    { name: "Ez Hostel", area: "Knowledge Park I", loc: "Knowledge Park I & III, Greater Noida (Head Office: A-41, Sector-62, Noida)", price: 6500, gender: "boys", amenities: ["WiFi", "AC", "Meals", "Laundry"], avail: "Available", rating: "★★★★☆", reviews: 55, img: "https://i.ibb.co/ymffqzCK/Ez-boys-hostel.webp" },
-    // { name: "Paradox Living Hostel", area: "Knowledge Park III", loc: "Knowledge Park III, Greater Noida (near GL Bajaj College)", price: 5800, gender: "boys", amenities: ["WiFi", "AC", "Gym"], avail: "Available", rating: "★★★★★", reviews: 73, img: "i6" },
-    // { name: "The Sunrise Hostel", area: "Knowledge Park III", loc: "1A, 29A, Knowledge Park III, Amity University Road, Surajpur Site 5 - 201310", price: 6200, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "AC"], avail: "3 seats left", rating: "★★★★☆", reviews: 47, img: "i7" },
+function cardThumb(h,height='130px'){
+  const url=imgOverrides[h.name]||'';
+  if(url&&url.startsWith('http'))return`<div class="card-thumb" style="height:${height}"><img src="${url}" alt="${h.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'card-thumb-placeholder ${h.gradient||'i1'}\\' style=\\'height:${height}\\'>🏠</div>'"/></div>`;
+  if(h.img&&h.img.startsWith('http'))return`<div class="card-thumb" style="height:${height}"><img src="${h.img}" alt="${h.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'card-thumb-placeholder ${h.gradient||'i1'}\\' style=\\'height:${height}\\'>🏠</div>'"/></div>`;
+  return`<div class="card-thumb-placeholder ${h.gradient||'i1'}" style="height:${height}">🏠</div>`;
+}
 
-    { name: "Shanti Girls Hostel", area: "Knowledge Park III", loc: "Knowledge Park III, Greater Noida", price: 4500, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 38, img: "https://imgs.search.brave.com/NdIyCmhzC-ZNHx0DE-oh5333BAofbR0BCHd-PU3SAqs/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmpkbWFnaWNi/b3guY29tL2NvbXAv/bHVja25vdy9qNi8w/NTIycHg1MjIueDUy/Mi4yMzAzMTUwODEz/MTMuZzNqNi9jYXRh/bG9ndWUvc2hhbnRp/LWdpcmxzLWhvc3Rl/bC1hbWl0eS11bml2/ZXJzaXR5LW5ldy1j/YW1wdXMtbWFsaGF1/ci1sdWNrbm93LWx1/Y2tub3ctaG9zdGVs/cy12OTZpc2Examc2/LmpwZz93PTM4NDAm/cT03NQ" },
-    { name: "Aarav Ladies PG", area: "Alpha 1", loc: "Alpha 1, Greater Noida", price: 6500, gender: "girls", amenities: ["WiFi", "AC", "Meals", "CCTV"], avail: "2 seats left", rating: "★★★★☆", reviews: 52, img: "https://imgs.search.brave.com/1mQuCv1TQcMim12XjqEtoDqn404t_YJ16LsLsQdODXs/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmpkbWFnaWNi/b3guY29tL3YyL2Nv/bXAvYmhhcnVjaC9k/OC85OTk5cDI2NDIu/MjY0Mi4yNDA1MDMy/MTE3MDcudTZkOC9j/YXRhbG9ndWUvYWFy/dmktcGctaG9tZS1i/aGFydWNoLXBheWlu/Zy1ndWVzdC1hY2Nv/bW1vZGF0aW9ucy1m/b3ItYm95LXN0dWRl/bnQtMDVwcHBzY3B0/bC0yNTAuanBnP3c9/Mzg0MCZxPTc1" },
-    { name: "Sunrise Women Hostel", area: "Beta 2", loc: "Beta 2, Greater Noida", price: 7000, gender: "girls", amenities: ["WiFi", "Meals", "CCTV", "Laundry"], avail: "Available", rating: "★★★★★", reviews: 67, img: "https://imgs.search.brave.com/tZ3_O0iLYnTaJPLCx-_1RC4K-Xi-qe2UnZemMjONxSA/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmpkbWFnaWNi/b3guY29tL3YyL2Nv/bXAvZGVsaGkvZjIv/MDExcHh4MTEueHgx/MS4yMzEwMTExNTAw/MzYucDVmMi9jYXRh/bG9ndWUvc3Vucmlz/ZS1ob3N0ZWwtbm9p/ZGEtc2VjdG9yLTEy/Ni1ub2lkYS1wYXlp/bmctZ3Vlc3QtYWNj/b21tb2RhdGlvbnMt/Zm9yLW1lbi1iNHEy/bHQxcDFlLmpwZz93/PTM4NDAmcT03NQ" },
-    { name: "Priya Ladies PG", area: "Gamma 1", loc: "Gamma 1, Greater Noida", price: 5500, gender: "girls", amenities: ["WiFi", "AC", "CCTV"], avail: "Available", rating: "★★★☆☆", reviews: 21, img: "https://imgs.search.brave.com/xqsvzDdHCB9FpLp9TKmWuvdw1Qc1O20JvN3i1HzjIZA/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmpkbWFnaWNi/b3guY29tL3YyL2Nv/bXAvYmFuZ2Fsb3Jl/L2I1LzA4MHB4eDgw/Lnh4ODAuMjUwNzI1/MTcwMTQ5LngxYjUv/Y2F0YWxvZ3VlL25x/ZDA1c256ZmptZW1z/ei1lanBvb2pxYTFw/LTI1MC5qcGc_dz02/NDAmcT03NQ" },
-    { name: "Savitri Girls Hostel", area: "Knowledge Park I", loc: "Knowledge Park I, Greater Noida", price: 4800, gender: "girls", amenities: ["WiFi", "Laundry", "Meals"], avail: "Available", rating: "★★★★☆", reviews: 33, img: "https://i.ibb.co/MxYvv9Nk/ll.webp" },
-    { name: "Campus Queen PG", area: "Knowledge Park III", loc: "Knowledge Park III, Greater Noida", price: 8500, gender: "girls", amenities: ["WiFi", "AC", "Meals", "CCTV", "Laundry"], avail: "1 seat left", rating: "★★★★★", reviews: 89, img: "https://i.ibb.co/cWHxd9G/aanandam-girls.webp" },
-  ];
+const icons={WiFi:'📶',Meals:'🍽️',Laundry:'🧺',CCTV:'📷',AC:'❄️',Gym:'💪','Swimming Pool':'🏊'};
 
-  /* Store user-provided URLs */
-  let imgOverrides = {};
-  try { const s = localStorage.getItem('hf_imgs'); if (s) imgOverrides = JSON.parse(s); } catch (e) { }
+// ✅ FIX: Start with EMPTY sets so all hostels show by default
+const activeTags={all:new Set(),girls:new Set(),boys:new Set()};
+let prevPage='all';
+let fbConfig={apiKey:'',projectId:''};
+let fbReady=false;
+let adminData=[];
 
-  /* ── KEY FUNCTION: renders the right image for a hostel ── */
-  function cardThumb(h, height = '130px') {
-    const key = h.name;
-    const url = imgOverrides[key] || '';
-    /* If user has pasted a URL override, use it */
-    if (url && url.startsWith('http')) {
-      return `<div class="card-thumb" style="height:${height}"><img src="${url}" alt="${h.name}" onerror="this.parentElement.innerHTML='<div class=\\'card-thumb-placeholder ${h.gradient}\\' style=\\'height:${height}\\'>🏠</div>'"/></div>`;
-    }
-    /* If img field is a real URL */
-    if (h.img && h.img.startsWith('http')) {
-      return `<div class="card-thumb" style="height:${height}"><img src="${h.img}" alt="${h.name}" onerror="this.parentElement.innerHTML='<div class=\\'card-thumb-placeholder ${h.gradient}\\' style=\\'height:${height}\\'>🏠</div>'"/></div>`;
-    }
-    /* Otherwise show gradient fallback */
-    return `<div class="card-thumb-placeholder ${h.gradient}" style="height:${height}">🏠</div>`;
+/* Firebase */
+function loadConfig(){try{const s=localStorage.getItem('hf_fb_config');if(s){fbConfig=JSON.parse(s);return true;}}catch(e){}return false;}
+function saveFirebaseConfig(){
+  const k=(document.getElementById('setup-apikey').value||'').trim();
+  const p=(document.getElementById('setup-projectid').value||'').trim();
+  if(!k||!p){alert('Please enter both API key and Project ID.');return;}
+  fbConfig={apiKey:k,projectId:p};
+  localStorage.setItem('hf_fb_config',JSON.stringify(fbConfig));
+  document.getElementById('setup-banner').classList.add('hidden');
+  initFirebase();
+}
+function initFirebase(){
+  if(!fbConfig.apiKey||!fbConfig.projectId){
+    setStatus('contact','red','Firebase not configured — click Setup below');
+    setStatus('admin','red','Firebase not configured');
+    document.getElementById('setup-banner').classList.remove('hidden');
+    return;
   }
+  setStatus('contact','amber','Connecting...');
+  setStatus('admin','amber','Connecting...');
+  fbReady=true;
+  setStatus('contact','green','Connected to Firebase ✓');
+  setStatus('admin','green','Connected to Firebase ✓');
+}
+function setStatus(where,color,text){
+  const dot=document.getElementById(where==='contact'?'fb-dot':'adb-dot');
+  const txt=document.getElementById(where==='contact'?'fb-status-text':'adb-status-text');
+  if(!dot||!txt)return;
+  dot.className='dot '+(color==='green'?'dot-green':color==='red'?'dot-red':'dot-amber');
+  txt.textContent=text;
+}
+function fsBase(){return`https://firestore.googleapis.com/v1/projects/${fbConfig.projectId}/databases/(default)/documents`;}
+function fsKey(){return`?key=${fbConfig.apiKey}`;}
+function toFsValue(val){if(typeof val==='string')return{stringValue:val};if(typeof val==='number')return{integerValue:String(val)};if(typeof val==='boolean')return{booleanValue:val};return{stringValue:String(val)};}
+function toFsDoc(obj){const fields={};for(const k in obj)fields[k]=toFsValue(obj[k]);return{fields};}
+function fromFsDoc(doc){const out={_id:doc.name?doc.name.split('/').pop():''};if(!doc.fields)return out;for(const k in doc.fields){const v=doc.fields[k];if(v.stringValue!==undefined)out[k]=v.stringValue;else if(v.integerValue!==undefined)out[k]=Number(v.integerValue);else if(v.booleanValue!==undefined)out[k]=v.booleanValue;else out[k]='';}return out;}
+async function fsAdd(collection,data){const url=`${fsBase()}/${collection}${fsKey()}`;const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(toFsDoc(data))});if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Firebase write failed');}return await res.json();}
+async function fsList(collection){const url=`${fsBase()}/${collection}${fsKey()}`;const res=await fetch(url);if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Firebase read failed');}const data=await res.json();if(!data.documents)return[];return data.documents.map(fromFsDoc);}
+async function fsDelete(collection,docId){const url=`${fsBase()}/${collection}/${docId}${fsKey()}`;const res=await fetch(url,{method:'DELETE'});if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Firebase delete failed');}}
 
-  const icons = { WiFi: '📶', Meals: '🍽️', Laundry: '🧺', CCTV: '📷', AC: '❄️', Gym: '💪', 'Swimming Pool': '🏊' };
-  const activeTags = { all: new Set(['WiFi']), girls: new Set(['WiFi']), boys: new Set(['WiFi']) };
-  let prevPage = 'all';
-  let adminData = [];
+/* Contact form */
+function validateField(id,errId,check){const el=document.getElementById(id);const err=document.getElementById(errId);const ok=check(el.value.trim());el.classList.toggle('err',!ok);err.classList.toggle('hidden',ok);return ok;}
+async function submitForm(){
+  const v1=validateField('fn','fn-err',v=>v.length>0);
+  const v2=validateField('fe','fe-err',v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
+  const v3=validateField('fp','fp-err',v=>v.length>5);
+  if(!v1||!v2||!v3)return;
+  if(!fbReady){document.getElementById('contact-error').textContent='Firebase is not connected.';document.getElementById('contact-error').classList.remove('hidden');return;}
+  const btn=document.getElementById('sbtn');btn.disabled=true;btn.textContent='Sending...';
+  document.getElementById('contact-error').classList.add('hidden');
+  const entry={name:document.getElementById('fn').value.trim(),email:document.getElementById('fe').value.trim(),phone:document.getElementById('fp').value.trim(),role:document.getElementById('fr').value,lookingFor:document.getElementById('fl').value,area:document.getElementById('fa').value,message:document.getElementById('fm').value.trim(),submittedAt:new Date().toISOString(),timestamp:Date.now()};
+  try{await fsAdd('enquiries',entry);document.getElementById('contact-form').classList.add('hidden');document.getElementById('contact-success').classList.remove('hidden');}
+  catch(e){document.getElementById('contact-error').textContent='Error: '+e.message;document.getElementById('contact-error').classList.remove('hidden');}
+  btn.disabled=false;btn.textContent='Send message';
+}
+function resetContactForm(){['fn','fe','fp','fm'].forEach(id=>{document.getElementById(id).value='';document.getElementById(id).classList.remove('err');});['fn-err','fe-err','fp-err'].forEach(id=>document.getElementById(id).classList.add('hidden'));document.getElementById('contact-form').classList.remove('hidden');document.getElementById('contact-success').classList.add('hidden');document.getElementById('contact-error').classList.add('hidden');}
 
-  function makeCard(h, type) {
-    const tc = type === 'girls' ? 'pink' : type === 'boys' ? 'blue' : '';
-    const cc = type === 'girls' ? 'card girls' : type === 'boys' ? 'card boys' : 'card';
-    const tags = h.amenities.map(a => `<span class="mini-tag ${tc}">${a}</span>`).join('');
-    return `<div class="${cc}" onclick="openDetail(${hostels.indexOf(h)},'${type}')">
-    ${cardThumb(h, '130px')}
+/* Admin */
+async function loadAdmin(){
+  setStatus('admin','amber','Loading...');
+  try{adminData=await fsList('enquiries');adminData.sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));setStatus('admin','green','Connected · '+adminData.length+' records');renderTable();}
+  catch(e){setStatus('admin','red','Error: '+e.message);document.getElementById('adm-tbody').innerHTML=`<tr><td colspan="10"><div class="empty-state">Failed to load: ${e.message}</div></td></tr>`;}
+}
+function renderTable(){
+  const q=(document.getElementById('adm-search').value||'').toLowerCase();
+  const tf=(document.getElementById('adm-type').value||'');
+  const rf=(document.getElementById('adm-role').value||'');
+  const data=adminData.filter(e=>{const txt=((e.name||'')+(e.email||'')+(e.phone||'')+(e.message||'')+(e.area||'')).toLowerCase();if(q&&!txt.includes(q))return false;if(tf&&e.lookingFor!==tf)return false;if(rf&&!(e.role||'').includes(rf))return false;return true;});
+  document.getElementById('st-total').textContent=adminData.length;
+  document.getElementById('st-girls').textContent=adminData.filter(e=>e.lookingFor==='Girls hostel').length;
+  document.getElementById('st-boys').textContent=adminData.filter(e=>e.lookingFor==='Boys hostel').length;
+  document.getElementById('st-owners').textContent=adminData.filter(e=>(e.role||'').includes('owner')).length;
+  if(!data.length){document.getElementById('adm-tbody').innerHTML=`<tr><td colspan="10"><div class="empty-state">${adminData.length===0?'No enquiries yet.':'No results match your filters.'}</div></td></tr>`;return;}
+  document.getElementById('adm-tbody').innerHTML=data.map((e,i)=>{const tc=e.lookingFor==='Girls hostel'?'tg':e.lookingFor==='Boys hostel'?'tb':'ta';const dt=e.submittedAt?new Date(e.submittedAt).toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'-';const roleShort=(e.role||'').split(' ')[0];return`<tr><td style="color:#6b7280">${i+1}</td><td style="font-weight:500;white-space:nowrap">${e.name||'-'}</td><td style="color:#a78bfa;white-space:nowrap">${e.phone||'-'}</td><td style="color:#60a5fa;font-size:12px;white-space:nowrap">${e.email||'-'}</td><td><span class="trole">${roleShort}</span></td><td><span class="tbadge ${tc}">${e.lookingFor||'-'}</span></td><td style="font-size:12px;color:#9ca3af;white-space:nowrap">${e.area||'-'}</td><td class="tmsg" title="${(e.message||'').replace(/"/g,'&quot;')}">${e.message||'-'}</td><td class="ttime">${dt}</td><td><button class="del-btn" onclick="delRow('${e._id}')">✕</button></td></tr>`;}).join('');
+}
+async function delRow(id){if(!confirm('Delete this enquiry?'))return;try{await fsDelete('enquiries',id);adminData=adminData.filter(e=>e._id!==id);renderTable();}catch(e){alert('Delete failed: '+e.message);}}
+async function confirmClearAll(){if(!confirm('Delete ALL enquiries from Firebase?'))return;try{await Promise.all(adminData.map(e=>fsDelete('enquiries',e._id)));adminData=[];renderTable();}catch(e){alert('Error: '+e.message);}}
+
+/* Cards & filters */
+function makeCard(h,type){
+  const tc=type==='girls'?'pink':type==='boys'?'blue':'';
+  const cc=type==='girls'?'card girls':type==='boys'?'card boys':'card';
+  const tags=h.amenities.map(a=>`<span class="mini-tag ${tc}">${a}</span>`).join('');
+  return`<div class="${cc}" onclick="openDetail(${hostels.indexOf(h)},'${type}')">
+    ${cardThumb(h,'130px')}
     <div class="card-body">
-      <div class="card-top"><div class="card-name">${h.name}</div><div class="avail ${h.avail === 'Available' ? 'avail-green' : 'avail-amber'}">${h.avail}</div></div>
+      <div class="card-top"><div class="card-name">${h.name}</div><div class="avail ${h.avail==='Available'?'avail-green':'avail-amber'}">${h.avail}</div></div>
       <div class="card-location">📍 ${h.loc}</div>
       <div class="card-tags">${tags}</div>
       <div class="card-footer"><div class="price ${tc}">₹${h.price.toLocaleString()} <span>/mo</span></div><div class="stars">${h.rating} <em>(${h.reviews})</em></div></div>
     </div>
   </div>`;
-  }
-  // const icons={WiFi:'📶',Meals:'🍽️',Laundry:'🧺',CCTV:'📷',AC:'❄️',Gym:'💪'};
-  // const activeTags={all:new Set(['WiFi']),girls:new Set(['WiFi']),boys:new Set(['WiFi'])};
-  // let prevPage='all';
-  // let fbConfig={apiKey:'',projectId:''};
-  // let fbReady=false;
-  // let adminData=[];
+}
+function buildGrid(gid,nid,cid,data,type){
+  const g=document.getElementById(gid);
+  g.innerHTML=data.map(h=>makeCard(h,type)).join('');
+  document.getElementById(cid).textContent=data.length+' result'+(data.length!==1?'s':'');
+  document.getElementById(nid).classList.toggle('hidden',data.length>0);
+  g.classList.toggle('hidden',data.length===0);
+}
+function applyFilters(data,search,area,price,tags){
+  return data.filter(h=>{
+    const txt=(h.name+h.area+h.loc).toLowerCase();
+    if(search&&!txt.includes(search.toLowerCase()))return false;
+    if(area&&h.area!==area)return false;
+    if(price==='low'&&h.price>=5000)return false;
+    if(price==='mid'&&(h.price<5000||h.price>9000))return false;
+    if(price==='high'&&h.price<=9000)return false;
+    for(const t of tags)if(!h.amenities.includes(t))return false;
+    return true;
+  });
+}
+function fAll(){buildGrid('grid-all','no-all','cnt-all',applyFilters(hostels,document.getElementById('sAll').value,document.getElementById('aAll').value,document.getElementById('pAll').value,activeTags.all),'all')}
+function fGirls(){buildGrid('grid-girls','no-girls','cnt-girls',applyFilters(hostels.filter(h=>h.gender==='girls'),document.getElementById('sGirls').value,document.getElementById('aGirls').value,document.getElementById('pGirls').value,activeTags.girls),'girls')}
+function fBoys(){buildGrid('grid-boys','no-boys','cnt-boys',applyFilters(hostels.filter(h=>h.gender==='boys'),document.getElementById('sBoys').value,document.getElementById('aBoys').value,document.getElementById('pBoys').value,activeTags.boys),'boys')}
+function tg(el,tag,page){
+  const s=activeTags[page];
+  if(s.has(tag)){s.delete(tag);el.classList.remove('active');}else{s.add(tag);el.classList.add('active');}
+  if(page==='all')fAll();else if(page==='girls')fGirls();else fBoys();
+}
 
-  /* ── Firebase config ── */
-  function loadConfig() {
-    try {
-      const saved = localStorage.getItem('hf_fb_config');
-      if (saved) { fbConfig = JSON.parse(saved); return true; }
-    } catch (e) { }
-    return false;
-  }
-  function saveFirebaseConfig() {
-    const k = (document.getElementById('setup-apikey').value || '').trim();
-    const p = (document.getElementById('setup-projectid').value || '').trim();
-    if (!k || !p) { alert('Please enter both API key and Project ID.'); return; }
-    fbConfig = { apiKey: k, projectId: p };
-    localStorage.setItem('hf_fb_config', JSON.stringify(fbConfig));
-    document.getElementById('setup-banner').classList.add('hidden');
-    initFirebase();
-  }
-  function initFirebase() {
-    if (!fbConfig.apiKey || !fbConfig.projectId) {
-      setStatus('contact', 'red', 'Firebase not configured — click Setup below');
-      setStatus('admin', 'red', 'Firebase not configured');
-      document.getElementById('setup-banner').classList.remove('hidden');
-      return;
-    }
-    setStatus('contact', 'amber', 'Connecting...');
-    setStatus('admin', 'amber', 'Connecting...');
-    fbReady = true;
-    setStatus('contact', 'green', 'Connected to Firebase ✓');
-    setStatus('admin', 'green', 'Connected to Firebase ✓');
-  }
-  function setStatus(where, color, text) {
-    const dot = document.getElementById(where === 'contact' ? 'fb-dot' : 'adb-dot');
-    const txt = document.getElementById(where === 'contact' ? 'fb-status-text' : 'adb-status-text');
-    if (!dot || !txt) return;
-    dot.className = 'dot ' + (color === 'green' ? 'dot-green' : color === 'red' ? 'dot-red' : 'dot-amber');
-    txt.textContent = text;
-  }
-
-  /* ── Firestore REST helpers ── */
-  function fsBase() { return `https://firestore.googleapis.com/v1/projects/${fbConfig.projectId}/databases/(default)/documents`; }
-  function fsKey() { return `?key=${fbConfig.apiKey}`; }
-
-  function toFsValue(val) {
-    if (typeof val === 'string') return { stringValue: val };
-    if (typeof val === 'number') return { integerValue: String(val) };
-    if (typeof val === 'boolean') return { booleanValue: val };
-    return { stringValue: String(val) };
-  }
-  function toFsDoc(obj) {
-    const fields = {};
-    for (const k in obj) fields[k] = toFsValue(obj[k]);
-    return { fields };
-  }
-  function fromFsDoc(doc) {
-    const out = { _id: doc.name ? doc.name.split('/').pop() : '' };
-    if (!doc.fields) return out;
-    for (const k in doc.fields) {
-      const v = doc.fields[k];
-      if (v.stringValue !== undefined) out[k] = v.stringValue;
-      else if (v.integerValue !== undefined) out[k] = Number(v.integerValue);
-      else if (v.booleanValue !== undefined) out[k] = v.booleanValue;
-      else out[k] = '';
-    }
-    return out;
-  }
-
-  async function fsAdd(collection, data) {
-    const url = `${fsBase()}/${collection}${fsKey()}`;
-    const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(toFsDoc(data)) });
-    if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'Firebase write failed'); }
-    return await res.json();
-  }
-  async function fsList(collection) {
-    const url = `${fsBase()}/${collection}${fsKey()}`;
-    const res = await fetch(url);
-    if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'Firebase read failed'); }
-    const data = await res.json();
-    if (!data.documents) return [];
-    return data.documents.map(fromFsDoc);
-  }
-  async function fsDelete(collection, docId) {
-    const url = `${fsBase()}/${collection}/${docId}${fsKey()}`;
-    const res = await fetch(url, { method: 'DELETE' });
-    if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'Firebase delete failed'); }
-  }
-
-  /* ── Contact form ── */
-  function validateField(id, errId, check) {
-    const el = document.getElementById(id);
-    const err = document.getElementById(errId);
-    const ok = check(el.value.trim());
-    el.classList.toggle('err', !ok);
-    err.classList.toggle('hidden', ok);
-    return ok;
-  }
-  async function submitForm() {
-    const v1 = validateField('fn', 'fn-err', v => v.length > 0);
-    const v2 = validateField('fe', 'fe-err', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
-    const v3 = validateField('fp', 'fp-err', v => v.length > 5);
-    if (!v1 || !v2 || !v3) return;
-    if (!fbReady) {
-      document.getElementById('contact-error').textContent = 'Firebase is not connected. Please configure it first.';
-      document.getElementById('contact-error').classList.remove('hidden');
-      return;
-    }
-    const btn = document.getElementById('sbtn');
-    btn.disabled = true; btn.textContent = 'Sending...';
-    document.getElementById('contact-error').classList.add('hidden');
-    const entry = {
-      name: document.getElementById('fn').value.trim(),
-      email: document.getElementById('fe').value.trim(),
-      phone: document.getElementById('fp').value.trim(),
-      role: document.getElementById('fr').value,
-      lookingFor: document.getElementById('fl').value,
-      area: document.getElementById('fa').value,
-      message: document.getElementById('fm').value.trim(),
-      submittedAt: new Date().toISOString(),
-      timestamp: Date.now()
-    };
-    try {
-      await fsAdd('enquiries', entry);
-      document.getElementById('contact-form').classList.add('hidden');
-      document.getElementById('contact-success').classList.remove('hidden');
-    } catch (e) {
-      document.getElementById('contact-error').textContent = 'Error: ' + e.message + '. Check your Firebase config and Firestore rules.';
-      document.getElementById('contact-error').classList.remove('hidden');
-    }
-    btn.disabled = false; btn.textContent = 'Send message';
-  }
-  function resetContactForm() {
-    ['fn', 'fe', 'fp', 'fm'].forEach(id => { document.getElementById(id).value = ''; document.getElementById(id).classList.remove('err'); });
-    ['fn-err', 'fe-err', 'fp-err'].forEach(id => document.getElementById(id).classList.add('hidden'));
-    document.getElementById('contact-form').classList.remove('hidden');
-    document.getElementById('contact-success').classList.add('hidden');
-    document.getElementById('contact-error').classList.add('hidden');
-  }
-
-  /* ── Admin ── */
-  async function loadAdmin() {
-    setStatus('admin', 'amber', 'Loading...');
-    try {
-      adminData = await fsList('enquiries');
-      adminData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-      setStatus('admin', 'green', 'Connected · ' + adminData.length + ' records');
-      renderTable();
-    } catch (e) {
-      setStatus('admin', 'red', 'Error: ' + e.message);
-      document.getElementById('adm-tbody').innerHTML = `<tr><td colspan="10"><div class="empty-state">Failed to load: ${e.message}</div></td></tr>`;
-    }
-  }
-  function renderTable() {
-    const q = (document.getElementById('adm-search').value || '').toLowerCase();
-    const tf = (document.getElementById('adm-type').value || '');
-    const rf = (document.getElementById('adm-role').value || '');
-    const data = adminData.filter(e => {
-      const txt = ((e.name || '') + (e.email || '') + (e.phone || '') + (e.message || '') + (e.area || '')).toLowerCase();
-      if (q && !txt.includes(q)) return false;
-      if (tf && e.lookingFor !== tf) return false;
-      if (rf && !(e.role || '').includes(rf)) return false;
-      return true;
-    });
-    document.getElementById('st-total').textContent = adminData.length;
-    document.getElementById('st-girls').textContent = adminData.filter(e => e.lookingFor === 'Girls hostel').length;
-    document.getElementById('st-boys').textContent = adminData.filter(e => e.lookingFor === 'Boys hostel').length;
-    document.getElementById('st-owners').textContent = adminData.filter(e => (e.role || '').includes('owner')).length;
-    if (!data.length) {
-      document.getElementById('adm-tbody').innerHTML = `<tr><td colspan="10"><div class="empty-state">${adminData.length === 0 ? 'No enquiries yet. Submissions will appear here after someone fills the contact form.' : 'No results match your filters.'}</div></td></tr>`;
-      return;
-    }
-    document.getElementById('adm-tbody').innerHTML = data.map((e, i) => {
-      const tc = e.lookingFor === 'Girls hostel' ? 'tg' : e.lookingFor === 'Boys hostel' ? 'tb' : 'ta';
-      const dt = e.submittedAt ? new Date(e.submittedAt).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
-      const roleShort = (e.role || '').split(' ')[0];
-      return `<tr>
-      <td style="color:#6b7280">${i + 1}</td>
-      <td style="font-weight:500;white-space:nowrap">${e.name || '-'}</td>
-      <td style="color:#a78bfa;white-space:nowrap">${e.phone || '-'}</td>
-      <td style="color:#60a5fa;font-size:12px;white-space:nowrap">${e.email || '-'}</td>
-      <td><span class="trole">${roleShort}</span></td>
-      <td><span class="tbadge ${tc}">${e.lookingFor || '-'}</span></td>
-      <td style="font-size:12px;color:#9ca3af;white-space:nowrap">${e.area || '-'}</td>
-      <td class="tmsg" title="${(e.message || '').replace(/"/g, '&quot;')}">${e.message || '-'}</td>
-      <td class="ttime">${dt}</td>
-      <td><button class="del-btn" onclick="delRow('${e._id}')">✕</button></td>
-    </tr>`;
-    }).join('');
-  }
-  async function delRow(id) {
-    if (!confirm('Delete this enquiry?')) return;
-    try {
-      await fsDelete('enquiries', id);
-      adminData = adminData.filter(e => e._id !== id);
-      renderTable();
-    } catch (e) { alert('Delete failed: ' + e.message); }
-  }
-  async function confirmClearAll() {
-    if (!confirm('Delete ALL enquiries from Firebase? This cannot be undone.')) return;
-    try {
-      await Promise.all(adminData.map(e => fsDelete('enquiries', e._id)));
-      adminData = []; renderTable();
-    } catch (e) { alert('Error: ' + e.message); }
-  }
-
-  /* ── Hostel cards & filters ── */
-  // function makeCard(h,type){
-  //   const tc=type==='girls'?'pink':type==='boys'?'blue':'';
-  //   const cc=type==='girls'?'card girls':type==='boys'?'card boys':'card';
-  //   const tags=h.amenities.map(a=>`<span class="mini-tag ${tc}">${a}</span>`).join('');
-  //   return`<div class="${cc}" onclick="openDetail(${hostels.indexOf(h)},'${type}')">
-  //     <div class="card-img-placeholder ${h.gradient}">🏠</div>
-  //     <div class="card-body">
-  //       <div class="card-top"><div class="card-name">${h.name}</div><div class="avail ${h.avail==='Available'?'avail-green':'avail-amber'}">${h.avail}</div></div>
-  //       <div class="card-location">📍 ${h.loc}</div>
-  //       <div class="card-tags">${tags}</div>
-  //       <div class="card-footer"><div class="price ${tc}">₹${h.price.toLocaleString()} <span>/mo</span></div><div class="stars">${h.rating} <em>(${h.reviews})</em></div></div>
-  //     </div>
-  //   </div>`;
-  // }
-  function buildGrid(gid, nid, cid, data, type) {
-    const g = document.getElementById(gid);
-    g.innerHTML = data.map(h => makeCard(h, type)).join('');
-    document.getElementById(cid).textContent = data.length + ' result' + (data.length !== 1 ? 's' : '');
-    document.getElementById(nid).classList.toggle('hidden', data.length > 0);
-    g.classList.toggle('hidden', data.length === 0);
-  }
-  function applyFilters(data, search, area, price, tags) {
-    return data.filter(h => {
-      const txt = (h.name + h.area + h.loc).toLowerCase();
-      if (search && !txt.includes(search.toLowerCase())) return false;
-      if (area && h.area !== area) return false;
-      if (price === 'low' && h.price >= 5000) return false;
-      if (price === 'mid' && (h.price < 5000 || h.price > 9000)) return false;
-      if (price === 'high' && h.price <= 9000) return false;
-      for (const t of tags) if (!h.amenities.includes(t)) return false;
-      return true;
-    });
-  }
-  function fAll() { buildGrid('grid-all', 'no-all', 'cnt-all', applyFilters(hostels, document.getElementById('sAll').value, document.getElementById('aAll').value, document.getElementById('pAll').value, activeTags.all), 'all') }
-  function fGirls() { buildGrid('grid-girls', 'no-girls', 'cnt-girls', applyFilters(hostels.filter(h => h.gender === 'girls'), document.getElementById('sGirls').value, document.getElementById('aGirls').value, document.getElementById('pGirls').value, activeTags.girls), 'girls') }
-  function fBoys() { buildGrid('grid-boys', 'no-boys', 'cnt-boys', applyFilters(hostels.filter(h => h.gender === 'boys'), document.getElementById('sBoys').value, document.getElementById('aBoys').value, document.getElementById('pBoys').value, activeTags.boys), 'boys') }
-  function tg(el, tag, page) {
-    const s = activeTags[page];
-    if (s.has(tag)) { s.delete(tag); el.classList.remove('active'); } else { s.add(tag); el.classList.add('active'); }
-    if (page === 'all') fAll(); else if (page === 'girls') fGirls(); else fBoys();
-  }
-
-  /* ── Detail page ── */
-  function openDetail(idx, from) {
-    prevPage = from || 'all';
-    const h = hostels[idx];
-    const g = h.gender === 'girls'; const b = h.gender === 'boys';
-    const ac = g ? '#f472b6' : b ? '#60a5fa' : '#a78bfa';
-    const btnBg = g ? '#be185d' : b ? '#1d4ed8' : '#7c3aed';
-    document.getElementById('detail-content').innerHTML = `
+/* Detail */
+function openDetail(idx,from){
+  prevPage=from||'all';
+  const h=hostels[idx];
+  const g=h.gender==='girls';const b=h.gender==='boys';
+  const ac=g?'#f472b6':b?'#60a5fa':'#a78bfa';
+  const btnBg=g?'#be185d':b?'#1d4ed8':'#7c3aed';
+  document.getElementById('detail-content').innerHTML=`
     <div class="detail-hero">
-      <div class="card-img-placeholder ${h.gradient}" style="width:100%;height:220px;font-size:50px;display:flex;align-items:center;justify-content:center;">🏠</div>
+      ${cardThumb(h,'200px')}
       <div class="detail-overlay"></div>
       <div class="detail-hero-content">
         <button class="back-btn" onclick="closeDetail()">← Back</button>
         <h1>${h.name}</h1>
-        <span class="dbadge ${g ? 'badge-g' : 'badge-b'}">${g ? 'Girls only' : 'Boys only'}</span>
+        <span class="dbadge ${g?'badge-g':'badge-b'}">${g?'Girls only':'Boys only'}</span>
       </div>
     </div>
     <div class="detail-body">
@@ -1839,40 +646,32 @@
         <div class="dinfo"><div class="dinfo-label">Monthly rent</div><div class="dinfo-value" style="color:${ac}">₹${h.price.toLocaleString()}<span style="font-size:12px;color:#6b7280"> /mo</span></div></div>
         <div class="dinfo"><div class="dinfo-label">Area</div><div class="dinfo-value" style="font-size:14px">${h.area}</div></div>
         <div class="dinfo"><div class="dinfo-label">Rating</div><div style="display:flex;align-items:center;gap:6px"><span style="color:#fbbf24">${h.rating}</span><span style="font-size:12px;color:#6b7280">(${h.reviews})</span></div></div>
-        <div class="dinfo"><div class="dinfo-label">Availability</div><div class="dinfo-value" style="font-size:14px;color:${h.avail === 'Available' ? '#4ade80' : '#fb923c'}">${h.avail}</div></div>
+        <div class="dinfo"><div class="dinfo-label">Availability</div><div class="dinfo-value" style="font-size:14px;color:${h.avail==='Available'?'#4ade80':'#fb923c'}">${h.avail}</div></div>
       </div>
       <div class="dsec"><h3>About</h3><p style="font-size:14px;color:#9ca3af;line-height:1.7">${h.desc}</p></div>
-      <div class="dsec"><h3>Location</h3><div style="background:#1c1c27;border:0.5px solid #2a2a35;border-radius:8px;padding:10px 14px;font-size:13px;color:#9ca3af">📍 ${h.loc}</div></div>
-      <div class="dsec"><h3>Amenities</h3><div class="chip-list">${h.amenities.map(a => `<div class="chip"><span style="font-size:14px">${icons[a] || '✓'}</span>${a}</div>`).join('')}</div></div>
-      <div class="dsec"><h3>Room types</h3><div class="chip-list">${h.roomTypes.map(r => `<div class="chip">🛏️ ${r}</div>`).join('')}</div></div>
-      <div class="dsec"><h3>Nearby colleges</h3><div class="chip-list">${h.colleges.map(c => `<div class="chip">🎓 ${c}</div>`).join('')}</div></div>
-      <div class="dsec"><h3>Rules</h3><div class="chip-list">${h.rules.map(r => `<div class="chip">📌 ${r}</div>`).join('')}</div></div>
+      <div class="dsec"><h3>Location</h3><div style="background:#1c1c27;border:.5px solid #2a2a35;border-radius:8px;padding:10px 14px;font-size:13px;color:#9ca3af">📍 ${h.loc}</div></div>
+      <div class="dsec"><h3>Amenities</h3><div class="chip-list">${h.amenities.map(a=>`<div class="chip"><span style="font-size:14px">${icons[a]||'✓'}</span>${a}</div>`).join('')}</div></div>
+      ${h.roomTypes?`<div class="dsec"><h3>Room types</h3><div class="chip-list">${h.roomTypes.map(r=>`<div class="chip">🛏️ ${r}</div>`).join('')}</div></div>`:''}
+      ${h.colleges?`<div class="dsec"><h3>Nearby colleges</h3><div class="chip-list">${h.colleges.map(c=>`<div class="chip">🎓 ${c}</div>`).join('')}</div></div>`:''}
+      ${h.rules?`<div class="dsec"><h3>Rules</h3><div class="chip-list">${h.rules.map(r=>`<div class="chip">📌 ${r}</div>`).join('')}</div></div>`:''}
       <div class="cta-row">
         <button class="btn-cta" style="background:${btnBg};color:#fff" onclick="gotoPage('contact')">📞 Contact & enquire</button>
         <button class="btn-cta-outline" onclick="closeDetail()">← Back to listings</button>
       </div>
     </div>`;
-    showPage('detail');
-  }
-  function closeDetail() { gotoPage(prevPage) }
+  showPage('detail');
+}
+function closeDetail(){gotoPage(prevPage);}
 
-  /* ── Page routing ── */
-  const PAGES = ['all', 'girls', 'boys', 'contact', 'detail', 'admin'];
-  function showPage(p) {
-    PAGES.forEach(pg => {
-      document.getElementById('page-' + pg).classList.toggle('hidden', pg !== p);
-      const btn = document.getElementById('btn-' + pg);
-      if (btn) btn.classList.toggle('active', pg === p);
-    });
-  }
-  function gotoPage(p) {
-    showPage(p);
-    if (p !== 'detail') prevPage = p;
-    if (p === 'admin') loadAdmin();
-  }
+/* Routing */
+const PAGES=['all','girls','boys','contact','detail','admin'];
+function showPage(p){PAGES.forEach(pg=>{document.getElementById('page-'+pg).classList.toggle('hidden',pg!==p);const btn=document.getElementById('btn-'+pg);if(btn)btn.classList.toggle('active',pg===p);});}
+function gotoPage(p){showPage(p);if(p!=='detail')prevPage=p;if(p==='admin')loadAdmin();}
 
-  /* ── Init ── */
-  loadConfig();
-  initFirebase();
-  fAll(); fGirls(); fBoys();
+/* Init */
+loadConfig();
+initFirebase();
+fAll();fGirls();fBoys();
 </script>
+</body>
+</html>
