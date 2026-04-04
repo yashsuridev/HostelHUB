@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:#0f1117;min-height:100vh;font-family:system-ui,-apple-system,sans-serif;color:#e4e4e7}
@@ -207,7 +209,7 @@
 <body>
 
 <nav class="navbar">
-  <div class="logo" onclick="gotoPage('all')">🏠 HostelFind</div>
+  <div class="logo" onclick="gotoPage('all')">🏠 Hostel Hub</div>
   <div class="nav-links">
     <button class="nav-btn active" id="btn-all" onclick="gotoPage('all')">All</button>
     <button class="nav-btn" id="btn-girls" onclick="gotoPage('girls')">Girls</button>
@@ -219,7 +221,9 @@
 
 <!-- ALL -->
 <div id="page-all">
-  <div class="hero">
+  <div class="hero" style="position:relative; overflow:hidden;">
+    <div id="heroMapAll" style="position:absolute; inset:0; opacity:0.25;"></div>
+    <div style="position:relative; z-index:2;">
     <h1>Find your hostel in <span style="color:#a78bfa">Greater Noida</span></h1>
     <p>Affordable, safe, and convenient stays near your campus</p>
     <div class="city-pill">📍 Greater Noida, Uttar Pradesh</div>
@@ -227,7 +231,9 @@
       <input id="sAll" type="text" placeholder="Search by name, area..." oninput="fAll()"/>
       <button class="btn-primary" onclick="fAll()">Search</button>
     </div>
+    <button class="btn-primary" onclick="gotoPage('map')" style="margin-top:10px">View Hostels on Map</button>
   </div>
+  </div>    
   <div class="filters-bar">
     <span>Filter:</span>
     <select id="aAll" onchange="fAll()">
@@ -259,7 +265,9 @@
 
 <!-- GIRLS -->
 <div id="page-girls" class="hidden">
-  <div class="hero" style="background:linear-gradient(135deg,#1a0a14 0%,#0f1117 60%)">
+  <div class="hero" style="position:relative; overflow:hidden;">
+    <div id="heroMapGirls" style="position:absolute; inset:0; opacity:0.25;"></div>
+    <div style="position:relative; z-index:2;">
     <h1>Safe stays for <span style="color:#f472b6">girls</span> in Greater Noida</h1>
     <p>Verified, secure hostels exclusively for women students</p>
     <div class="city-pill" style="color:#f472b6;border-color:#be185d;">📍 Greater Noida, Uttar Pradesh</div>
@@ -267,6 +275,8 @@
       <input id="sGirls" type="text" placeholder="Search girls hostels..." oninput="fGirls()"/>
       <button class="btn-pink" onclick="fGirls()">Search</button>
     </div>
+    <button class="btn-primary" onclick="gotoPage('map')" style="margin-top:10px">View Hostels on Map</button>
+  </div>
   </div>
   <div class="filters-bar">
     <span>Filter:</span>
@@ -300,7 +310,9 @@
 
 <!-- BOYS -->
 <div id="page-boys" class="hidden">
-  <div class="hero" style="background:linear-gradient(135deg,#050f1e 0%,#0f1117 60%)">
+  <div class="hero" style="position:relative; overflow:hidden;">
+    <div id="heroMapBoys" style="position:absolute; inset:0; opacity:0.25;"></div>
+    <div style="position:relative; z-index:2;">
     <h1>Great stays for <span style="color:#60a5fa">boys</span> in Greater Noida</h1>
     <p>Affordable, well-connected hostels exclusively for male students</p>
     <div class="city-pill" style="color:#60a5fa;border-color:#1d4ed8;">📍 Greater Noida, Uttar Pradesh</div>
@@ -308,6 +320,8 @@
       <input id="sBoys" type="text" placeholder="Search boys hostels..." oninput="fBoys()"/>
       <button class="btn-blue" onclick="fBoys()">Search</button>
     </div>
+    <button class="btn-primary" onclick="gotoPage('map')" style="margin-top:10px">View Hostels on Map</button>
+  </div>
   </div>
   <div class="filters-bar">
     <span>Filter:</span>
@@ -442,46 +456,71 @@
   </div>
 </div>
 
-<div class="footer">© 2026 HostelFind · Greater Noida's trusted student hostel directory</div>
+<div id="page-map" class="hidden">
+  <div class="hero">
+    <h1>Hostels Map – Greater Noida</h1>
+    <p>All hostels plotted on map</p>
+    <button class="btn-primary" onclick="gotoPage('all')">← Back</button>
+  </div>
+
+  <div style="padding:20px;">
+    <div id="fullMap" style="height:600px; border-radius:12px;"></div>
+  </div>
+</div>
+
+<div class="footer">© 2026 Hostel Hub · Greater Noida's trusted student hostel directory</div>
 
 <script>
-const hostels=[
-  {name:"Pakhi's Nest Girls Hostel",area:"Beta I",loc:"House No. 22, Sector Beta I, Near Ansal Plaza Mall Road, Opposite SBI ATM Lane",price:5200,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:48,img:"https://i.ibb.co/zH78qjT6/pakhi-s-Nest.jpg",gradient:"ig1",desc:"Comfortable and secure girls hostel with homely food, WiFi, and peaceful environment.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM","ID required for guests"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
-  {name:"The Destination Boys Hostel",area:"Knowledge Park II",loc:"Plot 14, Knowledge Park II, Near GL Bajaj Institute Main Gate, Service Road",price:5800,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV","AC"],avail:"Available",rating:"★★★★★",reviews:72,img:"https://i.ibb.co/wrZqySFP/destination.jpg",gradient:"i1",desc:"Premium boys hostel with AC rooms, high-speed WiFi, and biometric entry.",roomTypes:["Single","Double sharing"],rules:["No smoking","Gate closes at 11 PM"],colleges:["GL Bajaj","Sharda University","Galgotias College"]},
-  {name:"Anya Residency For Girls",area:"Delta I",loc:"D-18, Sector Delta I, Near Delta I Metro Station",price:4600,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:39,img:"https://i.ibb.co/0yhJj0ww/anya.jpg",gradient:"ig2",desc:"Affordable and clean girls hostel with spacious rooms, RO water, and daily housekeeping.",roomTypes:["Double sharing","Triple sharing"],rules:["No late entry after 10 PM"],colleges:["IIMT College","Sharda University"]},
-  {name:"Vizima Girls Hostel",area:"Gamma II",loc:"Plot 9, Gamma II Residential Area, Near Knowledge Park Police Chowki",price:5000,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV","AC"],avail:"Available",rating:"★★★★☆",reviews:44,img:"https://i.ibb.co/JVKtxfP/vz-Res.jpg",gradient:"ig3",desc:"Modern girls hostel with AC rooms, attached washrooms, and secure biometric entry.",roomTypes:["Single","Double sharing"],rules:["Visitors allowed in lobby only","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj"]},
-  {name:"Shiv Shakti Homes Boys Hostel",area:"Omega I",loc:"H-12, Sector Omega I, Near Jagat Farm Market",price:4300,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★☆☆",reviews:28,img:"https://i.ibb.co/mC0PXBrY/ssh.jpg",gradient:"i2",desc:"Budget-friendly boys hostel with mess facility, WiFi, and laundry service.",roomTypes:["Double sharing","Triple sharing"],rules:["Gate closes at 11 PM"],colleges:["IIMT College","GL Bajaj"]},
-  {name:"Kaveri Living Boys Hostel",area:"Knowledge Park III",loc:"Campus 2: C/20 A & B, Knowledge Park III & Campus 3, Alpha I",price:5500,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:59,img:"https://i.ibb.co/WvpxHBBb/ig8.jpg",gradient:"i3",desc:"Well-managed boys hostel across two campuses.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No female visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College","Galgotias University"]},
-  {name:"CasaBella Residency For Girls",area:"Knowledge Park III",loc:"C-20, Knowledge Park III, Near Sharda University Gate 2",price:4400,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:65,img:"https://i.ibb.co/GQ5WpYMW/Casa-Bella-Girls.jpg",gradient:"ig4",desc:"Well-maintained girls hostel with biometric entry and quiet study environment.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
-  {name:"Simran Hostel For Girls",area:"Knowledge Park III",loc:"Campus 2: C/20 A & B, Knowledge Park III & Campus 3, Alpha I",price:6400,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:65,img:"https://i.ibb.co/RGQpsNmr/simran.jpg",gradient:"ig5",desc:"A well-established girls hostel across two campuses.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
-  {name:"Siddhi Vinayak Girls Hostel",area:"Knowledge Park III",loc:"Beta 2, Near Metro Station, Greater Noida",price:4800,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:65,img:"https://i.ibb.co/DgffxHcc/siddhi-Vinyak-Girls.jpg",gradient:"ig6",desc:"Premium girls hostel with biometric entry, CCTV security, RO water, and attached washrooms.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
-  {name:"Limewood Girls Hostel",area:"Alpha I",loc:"Plot 12, Alpha I Commercial Belt, Opposite Pari Chowk Metro Station",price:4400,gender:"girls",amenities:["Swimming Pool","WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:65,img:"https://i.ibb.co/tw9Fc3jF/Limewood-Girls.jpg",gradient:"ig1",desc:"Modern girls hostel with spacious rooms, high-speed WiFi, swimming pool, and daily housekeeping.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
-  {name:"Saraswati Nivas Boys Hostel",area:"Gamma II",loc:"Plot 33, Gamma II Residential Area, Near Knowledge Park Police Chowki",price:5100,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:32,img:"https://i.ibb.co/1VZvQYL/Saraswati-Boys.jpg",gradient:"i4",desc:"A well-established boys hostel in a safe residential area.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["Curfew at 10 PM"],colleges:["GNIOT","Sharda University","GL Bajaj","IIMT College"]},
-  {name:"EZ Stays Mandela Mansion",area:"Delta I",loc:"D-22, Sector Delta I, Near Delta I Metro Station",price:6500,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:32,img:"https://i.ibb.co/czdKs37/ez-Mandela.jpg",gradient:"i5",desc:"A well-managed boys hostel near Delta Metro Station with full amenities.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["Curfew at 10 PM"],colleges:["GNIOT","Sharda University","GL Bajaj","IIMT College"]},
-  {name:"Vanya Residency For Girls",area:"Knowledge Park II",loc:"Plot 7, Knowledge Park II, Opposite GL Bajaj Institute",price:4400,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:65,img:"https://i.ibb.co/6J0ZmC4T/Vanya-Residemcy.jpg",gradient:"ig2",desc:"A well-established girls hostel near GL Bajaj.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
-  {name:"Bright Star Boys Hostel",area:"Knowledge Park III",loc:"Plot 5, Knowledge Park III, Near Sharda University Back Gate",price:5000,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:32,img:"https://i.ibb.co/Jwh60vhx/Bright-Star.jpg",gradient:"i6",desc:"A well-established boys hostel near Sharda University back gate.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["Curfew at 10 PM"],colleges:["GNIOT","Sharda University","GL Bajaj","IIMT College"]},
-  {name:"Finix Residency For Girls",area:"Alpha II",loc:"A-Block, Alpha II Residential Area, Near Pari Chowk Metro Station",price:6000,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:54,img:"https://i.ibb.co/PvKjZt2k/Finix-Residency.jpg",gradient:"ig3",desc:"A well-established girls hostel near Pari Chowk Metro Station.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["KCC","Sharda University","GL Bajaj","IIMT College"]},
-  {name:"Moon Boys Hostel",area:"Beta I",loc:"House No. 14, Sector Beta I, Near Ansal Plaza Mall",price:5100,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:58,img:"https://i.ibb.co/MDPW5d3N/Moon-Boys-Hostel.jpg",gradient:"i7",desc:"A well-established boys hostel near Ansal Plaza Mall.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
-  {name:"Shakuntalam Girls Hostel",area:"Omega I",loc:"H-Block, Sector Omega I, Near Jagat Farm Market",price:4800,gender:"girls",amenities:["WiFi","Meals","CCTV"],avail:"Available",rating:"★★★★☆",reviews:59,img:"https://i.ibb.co/xtYb8YgD/Shakuntalam-Girls.jpg",gradient:"ig4",desc:"Budget-friendly girls hostel with homely food and safe surroundings.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
-  {name:"Shivam Boys Hostel",area:"Omega I",loc:"Sector Omega I, Near Jagat Farm Market",price:5500,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:39,img:"https://i.ibb.co/QgQD4ph/Shivam-Boys.jpg",gradient:"i1",desc:"A well-managed boys hostel with good amenities.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No female visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College","Galgotias University"]},
-  {name:"Inayat Girls Hostel",area:"Knowledge Park I",loc:"Plot 9, Knowledge Park I, Near GL Bajaj Back Gate",price:5500,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:48,img:"https://i.ibb.co/7d4ZcjWj/Inayat.jpg",gradient:"ig5",desc:"A well-established girls hostel near GL Bajaj back gate.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College","Galgotias University"]},
-  {name:"Satvik Boys Hostel",area:"Delta II",loc:"D-55, Sector Delta II, Near Delta II Market",price:5500,gender:"boys",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:51,img:"https://i.ibb.co/Gb755Hg/Satvik-Boys.jpg",gradient:"i2",desc:"A well-managed boys hostel in Delta II with full amenities.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No female visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College","Galgotias University"]},
-  {name:"Magadh Inn Girls Hostel",area:"Knowledge Park III",loc:"Campus 2: C/20 A & B, Knowledge Park III & Campus 3, Alpha I",price:6000,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:44,img:"https://i.ibb.co/FZVFgzy/magadh.webp",gradient:"ig1",desc:"A well-established girls hostel across two campuses.",roomTypes:["Single","Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
-  {name:"Blue Heaven Girls Hostel",area:"Knowledge Park III",loc:"3A/2, A21, D29, Knowledge Park III, near GL Bajaj & Sharda",price:5500,gender:"girls",amenities:["WiFi","AC","Meals","CCTV","Laundry"],avail:"2 seats left",rating:"★★★★★",reviews:78,img:"https://i.ibb.co/FbrmsNxb/blue-heaven-hostel.webp",gradient:"ig3",desc:"Highest-rated girls hostel in the area with AC rooms, full meals, and 24/7 CCTV.",roomTypes:["Single AC","Double AC","Triple non-AC"],rules:["No male visitors","Biometric entry"],colleges:["GL Bajaj","Sharda University","GNIOT"]},
-  {name:"Anandam Girls Hostel",area:"Knowledge Park III",loc:"35B, Knowledge Park III, Adjacent to Sharda University",price:6500,gender:"girls",amenities:["WiFi","Meals","AC","CCTV"],avail:"3 seats left",rating:"★★★★★",reviews:93,img:"https://i.ibb.co/cWHxd9G/aanandam-girls.webp",gradient:"ig6",desc:"Adjacent to Sharda University — most reviewed and trusted girls hostel in KP3.",roomTypes:["Single AC","Double AC","Triple AC"],rules:["Biometric entry","Curfew at 10 PM"],colleges:["Sharda University","NIET","GNIOT"]},
-  {name:"Homies Hostel",area:"Knowledge Park III",loc:"Plot No. 9-B, Knowledge Park III, Greater Noida - 201308",price:5500,gender:"boys",amenities:["WiFi","AC","Laundry"],avail:"Available",rating:"★★★★★",reviews:61,img:"https://i.ibb.co/DgC9WJQ2/Homies-hostel.webp",gradient:"i2",desc:"Community-driven boys hostel consistently rated 5 stars.",roomTypes:["Double AC","Triple AC"],rules:["Visitor hours: 8AM–9PM","No smoking inside"],colleges:["GL Bajaj","Sharda University","NIET"]},
-  {name:"Paradox Living Hostel",area:"Knowledge Park III",loc:"Knowledge Park III, Greater Noida (near GL Bajaj College)",price:5800,gender:"boys",amenities:["WiFi","AC","Gym"],avail:"Available",rating:"★★★★★",reviews:73,img:"https://i.ibb.co/jvkg01BV/paradox.webp",gradient:"i6",desc:"The only hostel with a dedicated gym — perfect for fitness-focused students.",roomTypes:["Double AC","Triple AC"],rules:["Gym: 5AM–11PM","Visitor hours: 9AM–9PM"],colleges:["GL Bajaj","GNIOT","Sharda University"]},
-  {name:"The Sunrise Hostel",area:"Knowledge Park III",loc:"1A, 29A, Knowledge Park III, Amity University Road",price:6200,gender:"boys",amenities:["WiFi","Meals","Laundry","AC"],avail:"3 seats left",rating:"★★★★☆",reviews:47,img:"https://i.ibb.co/wrPzR4Sk/sunrise-hostel.jpg",gradient:"i6",desc:"Well-equipped hostel near Amity University Road.",roomTypes:["Double AC","Triple AC"],rules:["Visitor hours: 9AM–9PM"],colleges:["GL Bajaj","GNIOT","Sharda University"]},
-  {name:"AB Hostel",area:"Knowledge Park III",loc:"Plot No. 2C/1, Knowledge Park III, Greater Noida - 201310",price:6000,gender:"boys",amenities:["WiFi","Meals","Laundry"],avail:"Available",rating:"★★★★☆",reviews:42,img:"https://i.ibb.co/Dgp2dy5d/a-b-hostel.webp",gradient:"i3",desc:"Reliable boys hostel with meals and laundry in KP3.",roomTypes:["Double sharing","Triple sharing"],rules:["Gate closes at 11 PM"],colleges:["GL Bajaj","Sharda University"]},
-  {name:"Nalanda Living",area:"Knowledge Park III",loc:"Plot No. 25/3A, Besides Inter Globe College, Knowledge Park III - 201308",price:7000,gender:"boys",amenities:["WiFi","AC","Meals","Laundry"],avail:"2 seats left",rating:"★★★★☆",reviews:38,img:"https://i.ibb.co/93cMSb7f/nalanda-living-hostel.webp",gradient:"i4",desc:"Premium AC hostel with full meals and laundry.",roomTypes:["Double AC","Triple AC"],rules:["Gate closes at 11 PM"],colleges:["GL Bajaj","Sharda University","GNIOT"]},
-  {name:"Annapurna Boys Hostel",area:"Knowledge Park III",loc:"C-26, Greater Noida - 201310",price:4800,gender:"boys",amenities:["WiFi","Meals"],avail:"Available",rating:"★★★☆☆",reviews:24,img:"https://i.ibb.co/GGKn3gj/annapurna-boys-hostel.webp",gradient:"i5",desc:"Budget-friendly hostel with meals included.",roomTypes:["Triple sharing"],rules:["Gate closes at 10 PM"],colleges:["GL Bajaj","GNIOT"]},
-  {name:"Ez Hostel",area:"Knowledge Park I",loc:"Knowledge Park I & III, Greater Noida",price:6500,gender:"boys",amenities:["WiFi","AC","Meals","Laundry"],avail:"Available",rating:"★★★★☆",reviews:55,img:"https://i.ibb.co/ymffqzCK/Ez-boys-hostel.webp",gradient:"i1",desc:"Modern hostel across KP1 and KP3 with full amenities.",roomTypes:["Single AC","Double AC"],rules:["Gate closes at 11 PM"],colleges:["GL Bajaj","Sharda University","GNIOT"]},
-  {name:"Shanti Girls Hostel",area:"Knowledge Park III",loc:"Knowledge Park III, Greater Noida",price:4500,gender:"girls",amenities:["WiFi","Meals","Laundry","CCTV"],avail:"Available",rating:"★★★★☆",reviews:38,img:"https://i.ibb.co/MxYvv9Nk/ll.webp",gradient:"ig2",desc:"Peaceful and affordable girls hostel in KP3.",roomTypes:["Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj"]},
-  {name:"Aarav Ladies PG",area:"Alpha 1",loc:"Alpha 1, Greater Noida",price:6500,gender:"girls",amenities:["WiFi","AC","Meals","CCTV"],avail:"2 seats left",rating:"★★★★☆",reviews:52,img:"ig3",gradient:"ig3",desc:"Premium ladies PG with AC rooms and full meals.",roomTypes:["Single AC","Double AC"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj"]},
-  {name:"Sunrise Women Hostel",area:"Beta 2",loc:"Beta 2, Greater Noida",price:7000,gender:"girls",amenities:["WiFi","Meals","CCTV","Laundry"],avail:"Available",rating:"★★★★★",reviews:67,img:"ig4",gradient:"ig4",desc:"Top-rated women hostel with full amenities.",roomTypes:["Single","Double sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj","IIMT College"]},
-  {name:"Priya Ladies PG",area:"Gamma 1",loc:"Gamma 1, Greater Noida",price:5500,gender:"girls",amenities:["WiFi","AC","CCTV"],avail:"Available",rating:"★★★☆☆",reviews:21,img:"ig5",gradient:"ig5",desc:"Comfortable ladies PG with AC and CCTV.",roomTypes:["Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["Sharda University","GL Bajaj"]},
-  {name:"Savitri Girls Hostel",area:"Knowledge Park I",loc:"Knowledge Park I, Greater Noida",price:4800,gender:"girls",amenities:["WiFi","Laundry","Meals"],avail:"Available",rating:"★★★★☆",reviews:33,img:"https://i.ibb.co/MxYvv9Nk/ll.webp",gradient:"ig6",desc:"Clean and affordable girls hostel near KP1.",roomTypes:["Double sharing","Triple sharing"],rules:["No male visitors","Curfew at 10 PM"],colleges:["GL Bajaj","IIMT College"]},
-  {name:"Campus Queen PG",area:"Knowledge Park III",loc:"Knowledge Park III, Greater Noida",price:8500,gender:"girls",amenities:["WiFi","AC","Meals","CCTV","Laundry"],avail:"1 seat left",rating:"★★★★★",reviews:89,img:"https://i.ibb.co/cWHxd9G/aanandam-girls.webp",gradient:"ig1",desc:"Premium girls PG with all amenities and top-tier security.",roomTypes:["Single AC","Double AC"],rules:["No male visitors","Biometric entry"],colleges:["Sharda University","GL Bajaj","GNIOT"]}
+const hostels = [
+    { name: "Pakhi's Nest Girls Hostel", lat: 28.4816,lng: 77.5027, area: "Beta I", loc: "House No. 22, Sector Beta I, Near Ansal Plaza Mall Road, Opposite SBI ATM Lane", price: 5200, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 48, img: "https://i.ibb.co/zH78qjT6/pakhi-s-Nest.jpg", gradient: "ig1", desc: "Comfortable and secure girls hostel with homely food, WiFi, and peaceful environment.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM", "ID required for guests"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
+    { name: "The Destination Boys Hostel", lat: 28.4679,lng: 77.4918, area: "Knowledge Park II", loc: "Plot 14, Knowledge Park II, Near GL Bajaj Institute Main Gate, Service Road", price: 5800, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV", "AC"], avail: "Available", rating: "★★★★★", reviews: 72, img: "https://i.ibb.co/wrZqySFP/destination.jpg", gradient: "i1", desc: "Premium boys hostel with AC rooms, high-speed WiFi, and biometric entry. Popular among engineering students.", roomTypes: ["Single", "Double sharing"], rules: ["No smoking", "Gate closes at 11 PM"], colleges: ["GL Bajaj", "Sharda University", "Galgotias College"] },
+    { name: "Anya Residency For Girls", lat: 28.4749,lng: 77.5160,area: "Delta I", loc: "D-18, Sector Delta I, Near Delta I Metro Station, Walking Distance from Delta Market", price: 4600, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 39, img: "https://i.ibb.co/0yhJj0ww/anya.jpg", gradient: "ig2", desc: "Affordable and clean girls hostel with spacious rooms, RO water, and daily housekeeping.", roomTypes: ["Double sharing", "Triple sharing"], rules: ["No late entry after 10 PM"], colleges: ["IIMT College", "Sharda University"] },
+    { name: "Vizima Girls Hostel", lat: 28.4704,lng: 77.4978, area: "Gamma II", loc: "Plot 9, Gamma II Residential Area, Near Knowledge Park Police Chowki, Opposite Park", price: 5000, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV", "AC"], avail: "Available", rating: "★★★★☆", reviews: 44, img: "https://i.ibb.co/JVKtxfP/vz-Res.jpg", gradient: "ig3", desc: "Modern girls hostel with AC rooms, attached washrooms, and secure biometric entry.", roomTypes: ["Single", "Double sharing"], rules: ["Visitors allowed in lobby only", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj"] },
+    { name: "Shiv Shakti Homes Boys Hostel", lat: 28.4619,lng: 77.5096, area: "Omega I", loc: "H-12, Sector Omega I, Near Jagat Farm Market, Opposite Community Center", price: 4300, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★☆☆", reviews: 28, img: "https://i.ibb.co/mC0PXBrY/ssh.jpg", gradient: "i2", desc: "Budget-friendly boys hostel with mess facility, WiFi, and laundry service.", roomTypes: ["Double sharing", "Triple sharing"], rules: ["Gate closes at 11 PM"], colleges: ["IIMT College", "GL Bajaj"] },
+    { name: "Kaveri Living Boys Hostel", lat: 28.4697,lng: 77.4956, area: "Knowledge Park III", loc: "Campus 2: C/20 A & B, Knowledge Park III & Campus 3, Alpha I", price: 5500, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 59, img: "https://i.ibb.co/WvpxHBBb/ig8.jpg", gradient: "i3", desc: "Well-managed boys hostel across two campuses, known for cleanliness and attentive staff.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No female visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College", "Galgotias University"] },
+    { name: "CasaBella Residency For Girls", lat: 28.4708,lng: 77.4963, area: "Knowledge Park III", loc: "C-20, Knowledge Park III, Near Sharda University Gate 2", price: 4400, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 65, img: "https://i.ibb.co/GQ5WpYMW/Casa-Bella-Girls.jpg", gradient: "ig4", desc: "Well-maintained girls hostel with biometric entry and quiet study environment. Popular among Sharda and GL Bajaj students.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
+    { name: "Simran Hostel For Girls", lat: 28.4699,lng: 77.4971, area: "Knowledge Park III", loc: "Campus 2: C/20 A & B, Knowledge Park III & Campus 3, Alpha I", price: 6400, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 65, img: "https://i.ibb.co/RGQpsNmr/simran.jpg", gradient: "ig5", desc: "A well-established girls hostel across two campuses, known for cleanliness and attentive staff.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
+    { name: "Siddhi Vinayak Girls Hostel", lat: 28.4844,lng: 77.5090, area: "Knowledge Park III", loc: "Beta 2, Near Metro Station, Greater Noida", price: 4800, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 65, img: "https://i.ibb.co/DgffxHcc/siddhi-Vinyak-Girls.jpg", gradient: "ig6", desc: "Premium girls hostel with biometric entry, CCTV security, RO water, and attached washrooms.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
+    { name: "Limewood Girls Hostel", lat: 28.4595,lng: 77.5021,  area: "Alpha I", loc: "Plot 12, Alpha I Commercial Belt, Opposite Pari Chowk Metro Station, Near MSX Mall", price: 4400, gender: "girls", amenities: ["Swimming Pool", "WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 65, img: "https://i.ibb.co/tw9Fc3jF/Limewood-Girls.jpg", gradient: "ig1", desc: "Modern girls hostel with spacious rooms, high-speed WiFi, swimming pool, and daily housekeeping.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
+    { name: "Saraswati Nivas Boys Hostel", lat: 28.4711,lng: 77.4989, area: "Gamma II", loc: "Plot 33, Gamma II Residential Area, Near Knowledge Park Police Chowki", price: 5100, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 32, img: "https://i.ibb.co/1VZvQYL/Saraswati-Boys.jpg", gradient: "i4", desc: "A well-established boys hostel in a safe residential area with good amenities.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["Curfew at 10 PM"], colleges: ["GNIOT", "Sharda University", "GL Bajaj", "IIMT College"] },
+    { name: "EZ Stays Mandela Mansion", lat: 28.4760,lng: 77.5152, area: "Delta I", loc: "D-22, Sector Delta I, Near Delta I Metro Station, Walking distance from Delta Market", price: 6500, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 32, img: "https://i.ibb.co/czdKs37/ez-Mandela.jpg", gradient: "i5", desc: "A well-managed boys hostel near Delta Metro Station with full amenities.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["Curfew at 10 PM"], colleges: ["GNIOT", "Sharda University", "GL Bajaj", "IIMT College"] },
+    { name: "Vanya Residency For Girls", lat: 28.4685,lng: 77.4909, area: "Knowledge Park II", loc: "Plot 7, Knowledge Park II, Opposite GL Bajaj Institute, Service Lane Road", price: 4400, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 65, img: "https://i.ibb.co/6J0ZmC4T/Vanya-Residemcy.jpg", gradient: "ig2", desc: "A well-established girls hostel near GL Bajaj, known for cleanliness and attentive staff.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
+    { name: "Bright Star Boys Hostel", lat: 28.4702,lng: 77.4948, area: "Knowledge Park III", loc: "Plot 5, Knowledge Park III, Near Sharda University Back Gate, Behind Petrol Pump", price: 5000, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 32, img: "https://i.ibb.co/Jwh60vhx/Bright-Star.jpg", gradient: "i6", desc: "A well-established boys hostel near Sharda University back gate.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["Curfew at 10 PM"], colleges: ["GNIOT", "Sharda University", "GL Bajaj", "IIMT College"] },
+    { name: "Finix Residency For Girls", lat: 28.4567,lng: 77.5058, area: "Alpha II", loc: "A-Block, Alpha II Residential Area, Near Pari Chowk Metro Station and Ansal Plaza", price: 6000, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 54, img: "https://i.ibb.co/PvKjZt2k/Finix-Residency.jpg", gradient: "ig3", desc: "A well-established girls hostel near Pari Chowk Metro Station.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["KCC", "Sharda University", "GL Bajaj", "IIMT College"] },
+    { name: "Moon Boys Hostel", lat: 28.4823,lng: 77.5036, area: "Beta I", loc: "House No. 14, Sector Beta I, Near Ansal Plaza Mall, Adjacent to SBI Bank Lane", price: 5100, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 58, img: "https://i.ibb.co/MDPW5d3N/Moon-Boys-Hostel.jpg", gradient: "i7", desc: "A well-established boys hostel near Ansal Plaza Mall.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
+    { name: "Shakuntalam Girls Hostel", lat: 28.4625,lng: 77.5104, area: "Omega I", loc: "H-Block, Sector Omega I, Near Jagat Farm Market, Behind HDFC Bank Lane", price: 4800, gender: "girls", amenities: ["WiFi", "Meals", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 59, img: "https://i.ibb.co/xtYb8YgD/Shakuntalam-Girls.jpg", gradient: "ig4", desc: "Budget-friendly girls hostel with homely food and safe surroundings.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
+    { name: "Shivam Boys Hostel", lat: 28.4621,lng: 77.5099, area: "Omega I", loc: "Sector Omega I, Near Jagat Farm Market, Opposite Community Center", price: 5500, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 39, img: "https://i.ibb.co/QgQD4ph/Shivam-Boys.jpg", gradient: "i1", desc: "A well-managed boys hostel with good amenities and community atmosphere.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No female visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College", "Galgotias University"] },
+    { name: "Inayat Girls Hostel", lat: 28.4660,lng: 77.4885, area: "Knowledge Park I", loc: "Plot 9, Knowledge Park I, Near GL Bajaj Back Gate, Service Road Side", price: 5500, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 48, img: "https://i.ibb.co/7d4ZcjWj/Inayat.jpg", gradient: "ig5", desc: "A well-established girls hostel near GL Bajaj back gate.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No female visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College", "Galgotias University"] },
+    { name: "Satvik Boys Hostel", lat: 28.4798,lng: 77.5184, area: "Delta II", loc: "D-55, Sector Delta II, Near Delta II Market and Community Park", price: 5500, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 51, img: "https://i.ibb.co/Gb755Hg/Satvik-Boys.jpg", gradient: "i2", desc: "A well-managed boys hostel in Delta II with full amenities.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No female visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College", "Galgotias University"] },
+    { name: "Magadh Inn Girls Hostel", lat: 28.4705,lng: 77.4968, area: "Knowledge Park III", loc: "Campus 2: C/20 A & B, Knowledge Park III & Campus 3, Alpha I", price: 6000, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 44, img: "https://i.ibb.co/FZVFgzy/magadh.webp", gradient: "ig1", desc: "A well-established girls hostel across two campuses, known for cleanliness and attentive staff.", roomTypes: ["Single", "Double sharing", "Triple sharing"], rules: ["No male visitors", "Curfew at 10 PM"], colleges: ["Sharda University", "GL Bajaj", "IIMT College"] },
+    { name: "Blue Heaven Girls Hostel", lat: 28.4713,lng: 77.4952, area: "Knowledge Park III", loc: "3A/2, A21, D29, Knowledge Park III, near GL Bajaj & Sharda", price: 5500, gender: "girls", amenities: ["WiFi", "AC", "Meals", "CCTV", "Laundry"], avail: "2 seats left", rating: "★★★★★", reviews: 78, img: "https://i.ibb.co/FbrmsNxb/blue-heaven-hostel.webp", gradient: "ig3", desc: "Highest-rated girls hostel in the area with AC rooms, full meals, and 24/7 CCTV.", roomTypes: ["Single AC", "Double AC", "Triple non-AC"], rules: ["No male visitors", "Biometric entry"], colleges: ["GL Bajaj", "Sharda University", "GNIOT"] },
+    { name: "Anandam Girls Hostel", lat: 28.4720,lng: 77.4961, area: "Knowledge Park III", loc: "35B, Knowledge Park III, Adjacent to Sharda University", price: 6500, gender: "girls", amenities: ["WiFi", "Meals", "AC", "CCTV"], avail: "3 seats left", rating: "★★★★★", reviews: 93, img: "https://i.ibb.co/cWHxd9G/aanandam-girls.webp", gradient: "ig6", desc: "Adjacent to Sharda University — most reviewed and trusted girls hostel in KP3.", roomTypes: ["Single AC", "Double AC", "Triple AC"], rules: ["Biometric entry", "Curfew at 10 PM"], colleges: ["Sharda University", "NIET", "GNIOT"] },
+    { name: "Homies Hostel", lat: 28.4692,lng: 77.4950, area: "Knowledge Park III", loc: "Plot No. 9-B, Knowledge Park III, Greater Noida - 201308", price: 5500, gender: "boys", amenities: ["WiFi", "AC", "Laundry"], avail: "Available", rating: "★★★★★", reviews: 61, img: "https://i.ibb.co/DgC9WJQ2/Homies-hostel.webp", gradient: "i2", desc: "Community-driven boys hostel consistently rated 5 stars for great atmosphere.", roomTypes: ["Double AC", "Triple AC"], rules: ["Visitor hours: 8AM–9PM", "No smoking inside"], colleges: ["GL Bajaj", "Sharda University", "NIET"] },
+    { name: "Paradox Living Hostel", lat: 28.4687,lng: 77.4942, area: "Knowledge Park III", loc: "Knowledge Park III, Greater Noida (near GL Bajaj College)", price: 5800, gender: "boys", amenities: ["WiFi", "AC", "Gym"], avail: "Available", rating: "★★★★★", reviews: 73, img: "https://i.ibb.co/jvkg01BV/paradox.webp", gradient: "i6", desc: "The only hostel with a dedicated gym — perfect for fitness-focused students.", roomTypes: ["Double AC", "Triple AC"], rules: ["Gym: 5AM–11PM", "Visitor hours: 9AM–9PM"], colleges: ["GL Bajaj", "GNIOT", "Sharda University"] },
+    { name: "The Sunrise Hostel", lat: 28.4735,lng: 77.4980, area: "Knowledge Park III", loc: "1A, 29A, Knowledge Park III, Amity University Road, Surajpur Site 5 - 201310", price: 6200, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "AC"], avail: "3 seats left", rating: "★★★★☆", reviews: 47, img: "https://i.ibb.co/wrPzR4Sk/sunrise-hostel.jpg", gradient: "i6", desc: "The only hostel with a dedicated gym — perfect for fitness-focused students.", roomTypes: ["Double AC", "Triple AC"], rules: ["Gym: 5AM–11PM", "Visitor hours: 9AM–9PM"], colleges: ["GL Bajaj", "GNIOT", "Sharda University"] },
+    { name: "AB Hostel", lat: 28.4717,lng: 77.4975, area: "Knowledge Park III", loc: "Plot No. 2C/1, Knowledge Park III, Greater Noida - 201310", price: 6000, gender: "boys", amenities: ["WiFi", "Meals", "Laundry"], avail: "Available", rating: "★★★★☆", reviews: 42, img: "https://i.ibb.co/Dgp2dy5d/a-b-hostel.webp" },
+    { name: "Homies Hostel", lat: 28.4680,lng: 77.4935, area: "Knowledge Park III", loc: "Plot No. 9-B, Knowledge Park III, Greater Noida - 201308", price: 5500, gender: "boys", amenities: ["WiFi", "AC", "Laundry"], avail: "Available", rating: "★★★★★", reviews: 61, img: "i2" },
+    { name: "Nalanda Living", lat: 28.4680,lng: 77.4935, area: "Knowledge Park III", loc: "Plot No. 25/3A, Besides Inter Globe College, Knowledge Park III - 201308", price: 7000, gender: "boys", amenities: ["WiFi", "AC", "Meals", "Laundry"], avail: "2 seats left", rating: "★★★★☆", reviews: 38, img: "https://i.ibb.co/93cMSb7f/nalanda-living-hostel.webp" },
+    { name: "Annapurna Boys Hostel", lat: 28.4709,lng: 77.4960, area: "Knowledge Park III", loc: "C-26, Greater Noida - 201310", price: 4800, gender: "boys", amenities: ["WiFi", "Meals"], avail: "Available", rating: "★★★☆☆", reviews: 24, img: "https://i.ibb.co/GGKn3gj/annapurna-boys-hostel.webp" },
+    { name: "Ez Hostel", lat: 28.4655,lng: 77.4875, area: "Knowledge Park I", loc: "Knowledge Park I & III, Greater Noida (Head Office: A-41, Sector-62, Noida)", price: 6500, gender: "boys", amenities: ["WiFi", "AC", "Meals", "Laundry"], avail: "Available", rating: "★★★★☆", reviews: 55, img: "https://i.ibb.co/ymffqzCK/Ez-boys-hostel.webp" },
+    { name: "Paradox Living Hostel", area: "Knowledge Park III", loc: "Knowledge Park III, Greater Noida (near GL Bajaj College)", price: 5800, gender: "boys", amenities: ["WiFi", "AC", "Gym"], avail: "Available", rating: "★★★★★", reviews: 73, img: "i6" },
+    { name: "The Sunrise Hostel", area: "Knowledge Park III", loc: "1A, 29A, Knowledge Park III, Amity University Road, Surajpur Site 5 - 201310", price: 6200, gender: "boys", amenities: ["WiFi", "Meals", "Laundry", "AC"], avail: "3 seats left", rating: "★★★★☆", reviews: 47, img: "i7" },
+    { name: "Shanti Girls Hostel", area: "Knowledge Park III", loc: "Knowledge Park III, Greater Noida", price: 4500, gender: "girls", amenities: ["WiFi", "Meals", "Laundry", "CCTV"], avail: "Available", rating: "★★★★☆", reviews: 38, img: "https://imgs.search.brave.com/NdIyCmhzC-ZNHx0DE-oh5333BAofbR0BCHd-PU3SAqs/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmpkbWFnaWNi/b3guY29tL2NvbXAv/bHVja25vdy9qNi8w/NTIycHg1MjIueDUy/Mi4yMzAzMTUwODEz/MTMuZzNqNi9jYXRh/bG9ndWUvc2hhbnRp/LWdpcmxzLWhvc3Rl/bC1hbWl0eS11bml2/ZXJzaXR5LW5ldy1j/YW1wdXMtbWFsaGF1/ci1sdWNrbm93LWx1/Y2tub3ctaG9zdGVs/cy12OTZpc2Examc2/LmpwZz93PTM4NDAm/cT03NQ" },
+    { name: "Aarav Ladies PG", area: "Alpha 1", loc: "Alpha 1, Greater Noida", price: 6500, gender: "girls", amenities: ["WiFi", "AC", "Meals", "CCTV"], avail: "2 seats left", rating: "★★★★☆", reviews: 52, img: "https://imgs.search.brave.com/1mQuCv1TQcMim12XjqEtoDqn404t_YJ16LsLsQdODXs/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmpkbWFnaWNi/b3guY29tL3YyL2Nv/bXAvYmhhcnVjaC9k/OC85OTk5cDI2NDIu/MjY0Mi4yNDA1MDMy/MTE3MDcudTZkOC9j/YXRhbG9ndWUvYWFy/dmktcGctaG9tZS1i/aGFydWNoLXBheWlu/Zy1ndWVzdC1hY2Nv/bW1vZGF0aW9ucy1m/b3ItYm95LXN0dWRl/bnQtMDVwcHBzY3B0/bC0yNTAuanBnP3c9/Mzg0MCZxPTc1" },
+    { name: "Sunrise Women Hostel", area: "Beta 2", loc: "Beta 2, Greater Noida", price: 7000, gender: "girls", amenities: ["WiFi", "Meals", "CCTV", "Laundry"], avail: "Available", rating: "★★★★★", reviews: 67, img: "https://imgs.search.brave.com/tZ3_O0iLYnTaJPLCx-_1RC4K-Xi-qe2UnZemMjONxSA/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmpkbWFnaWNi/b3guY29tL3YyL2Nv/bXAvZGVsaGkvZjIv/MDExcHh4MTEueHgx/MS4yMzEwMTExNTAw/MzYucDVmMi9jYXRh/bG9ndWUvc3Vucmlz/ZS1ob3N0ZWwtbm9p/ZGEtc2VjdG9yLTEy/Ni1ub2lkYS1wYXlp/bmctZ3Vlc3QtYWNj/b21tb2RhdGlvbnMt/Zm9yLW1lbi1iNHEy/bHQxcDFlLmpwZz93/PTM4NDAmcT03NQ" },
+    { name: "Priya Ladies PG", area: "Gamma 1", loc: "Gamma 1, Greater Noida", price: 5500, gender: "girls", amenities: ["WiFi", "AC", "CCTV"], avail: "Available", rating: "★★★☆☆", reviews: 21, img: "https://imgs.search.brave.com/xqsvzDdHCB9FpLp9TKmWuvdw1Qc1O20JvN3i1HzjIZA/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmpkbWFnaWNi/b3guY29tL3YyL2Nv/bXAvYmFuZ2Fsb3Jl/L2I1LzA4MHB4eDgw/Lnh4ODAuMjUwNzI1/MTcwMTQ5LngxYjUv/Y2F0YWxvZ3VlL25x/ZDA1c256ZmptZW1z/ei1lanBvb2pxYTFw/LTI1MC5qcGc_dz02/NDAmcT03NQ" },
+    { name: "Savitri Girls Hostel", area: "Knowledge Park I", loc: "Knowledge Park I, Greater Noida", price: 4800, gender: "girls", amenities: ["WiFi", "Laundry", "Meals"], avail: "Available", rating: "★★★★☆", reviews: 33, img: "https://i.ibb.co/MxYvv9Nk/ll.webp" },
+    { name: "Campus Queen PG", area: "Knowledge Park III", loc: "Knowledge Park III, Greater Noida", price: 8500, gender: "girls", amenities: ["WiFi", "AC", "Meals", "CCTV", "Laundry"], avail: "1 seat left", rating: "★★★★★", reviews: 89, img: "https://i.ibb.co/cWHxd9G/aanandam-girls.webp" },
+    { name:"Green Valley Boys Hostel",  area:"Alpha I",  loc:"Plot 21, Alpha I Residential Area, Near Pari Chowk Metro Station",  price:5600,  gender:"boys",  amenities:["WiFi","Meals","Laundry","CCTV"],  avail:"Available",  rating:"★★★★☆",  reviews:41,  gradient:"images/GreenValleyBoys.jpeg",  desc:"Comfortable boys hostel with spacious rooms, WiFi, and daily housekeeping near Pari Chowk.",  roomTypes:["Double sharing","Triple sharing"],  rules:["Gate closes at 11 PM"],  colleges:["GL Bajaj","Sharda University"]},
+    { name:"Sunshine Girls Hostel",  area:"Delta I",  loc:"D-14, Sector Delta I, Near Delta Metro Station",  price:4800,  gender:"girls",  amenities:["WiFi","Meals","Laundry","CCTV"],  avail:"Available",  rating:"★★★★☆",  reviews:36,  gradient:"images/SunshineGirls.jpeg",  desc:"Safe and budget-friendly girls hostel with home-style meals and secure environment.",  roomTypes:["Double sharing","Triple sharing"],  rules:["No male visitors","Curfew at 10 PM"],  colleges:["IIMT College","Galgotias University"]},
+    { name:"Royal Stay Boys Hostel",  area:"Knowledge Park I",  loc:"Plot 11, Knowledge Park I, Near Galgotias College",  price:6200,  gender:"boys",  amenities:["WiFi","AC","Meals","Laundry","CCTV"],  avail:"Available",  rating:"★★★★★",  reviews:52,  gradient:"images/RoyalStayBoys.jpeg",  desc:"Premium boys hostel with AC rooms, fast WiFi, and attached washrooms.",  roomTypes:["Single AC","Double AC"],  rules:["No smoking","Gate closes at 11 PM"],  colleges:["Galgotias College","Sharda University"]},
+    { name:"Comfort Living Girls Hostel",  area:"Gamma I",  loc:"House 18, Gamma I Sector, Near Community Park",  price:5100,  gender:"girls",  amenities:["WiFi","Meals","Laundry","CCTV"],  avail:"Available",  rating:"★★★★☆",  reviews:29,  gradient:"images/ComfortGirls.jpeg",  desc:"Peaceful girls hostel in residential area with good food and WiFi.",  roomTypes:["Double sharing","Triple sharing"],  rules:["No male visitors"],  colleges:["Sharda University","GL Bajaj"]},
+    { name:"Metro Living Boys Hostel",  area:"Beta II",  loc:"B-22, Beta II Sector, Near Beta II Metro Station",  price:5300,  gender:"boys",  amenities:["WiFi","Meals","Laundry","CCTV"],  avail:"Available",  rating:"★★★★☆",  reviews:33,  gradient:"images/MetroBoys.jpeg",  desc:"Boys hostel near metro station with WiFi, meals, and laundry facilities.",  roomTypes:["Double sharing","Triple sharing"],  rules:["Gate closes at 11 PM"],  colleges:["GNIOT","Sharda University"]},
+    { name:"Silver Nest Girls Hostel",  area:"Omega II",  loc:"Omega II Residential Area, Near Jagat Farm Market",  price:4700,  gender:"girls",  amenities:["WiFi","Meals","CCTV"],  avail:"Available",  rating:"★★★☆☆",  reviews:21,  gradient:"images/SilverNestGirls.jpeg",  desc:"Affordable girls hostel with clean rooms and homely food.",  roomTypes:["Triple sharing"],  rules:["Curfew at 10 PM"],  colleges:["IIMT College","GL Bajaj"]},
+    { name:"Urban Stay Boys Hostel",  area:"Pari Chowk",  loc:"Near Pari Chowk Circle, Opposite MSX Mall",  price:6800,  gender:"boys",  amenities:["WiFi","AC","Meals","Gym","CCTV"],  avail:"Available",  rating:"★★★★★",  reviews:67,  gradient:"images/UrbanStayBoys.jpeg",  desc:"Modern boys hostel with gym, AC rooms, and high-speed WiFi near Pari Chowk.",  roomTypes:["Single AC","Double AC"],  rules:["No smoking"],  colleges:["Amity University","GL Bajaj"]},
+    { name:"Happy Homes Girls Hostel",  area:"Knowledge Park II",  loc:"Plot 6, Knowledge Park II, Near GL Bajaj Back Gate",  price:4500,  gender:"girls",  amenities:["WiFi","Meals","Laundry","CCTV"],  avail:"Available",  rating:"★★★★☆",  reviews:34,  gradient:"images/HappyHomesGirls.jpeg",  desc:"Budget-friendly girls hostel close to GL Bajaj with meals and laundry.",  roomTypes:["Double sharing","Triple sharing"],  rules:["No male visitors"],  colleges:["GL Bajaj","Sharda University"]},
+    { name:"Student Haven Boys Hostel",  area:"Knowledge Park III",  loc:"Plot 8, Knowledge Park III, Near Sharda University",  price:5900,  gender:"boys",  amenities:["WiFi","Meals","Laundry","CCTV","AC"],  avail:"Available",  rating:"★★★★☆",  reviews:45,  gradient:"images/StudentHavenBoys.jpeg",  desc:"Popular boys hostel among engineering students with AC rooms and meals.",  roomTypes:["Double AC","Triple AC"],  rules:["Gate closes at 11 PM"],  colleges:["Sharda University","GL Bajaj"]},
+    { name:"City Nest Girls Hostel",  area:"Alpha II",  loc:"Alpha II Residential Area, Near Ansal Plaza",  price:5200,  gender:"girls",  amenities:["WiFi","Meals","Laundry","CCTV","AC"],  avail:"Available",  rating:"★★★★☆",  reviews:40,  gradient:"images/CityNestGirls.jpeg",  desc:"Modern girls hostel with AC rooms and secure environment near Alpha II.",  roomTypes:["Single AC","Double AC"],  rules:["Curfew at 10 PM"],  colleges:["GL Bajaj","GNIOT"]}
 ];
 
 let imgOverrides={};
@@ -666,12 +705,105 @@ function closeDetail(){gotoPage(prevPage);}
 /* Routing */
 const PAGES=['all','girls','boys','contact','detail','admin'];
 function showPage(p){PAGES.forEach(pg=>{document.getElementById('page-'+pg).classList.toggle('hidden',pg!==p);const btn=document.getElementById('btn-'+pg);if(btn)btn.classList.toggle('active',pg===p);});}
-function gotoPage(p){showPage(p);if(p!=='detail')prevPage=p;if(p==='admin')loadAdmin();}
+function gotoPage(page){
+  prevPage = page;
+
+  document.getElementById('page-all').classList.add('hidden');
+  document.getElementById('page-girls').classList.add('hidden');
+  document.getElementById('page-boys').classList.add('hidden');
+  document.getElementById('page-contact').classList.add('hidden');
+  document.getElementById('page-admin').classList.add('hidden');
+  document.getElementById('page-detail').classList.add('hidden');
+  document.getElementById('page-map').classList.add('hidden');
+
+  document.getElementById('page-' + page).classList.remove('hidden');
+
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('btn-' + page);
+  if(btn) btn.classList.add('active');
+
+  setTimeout(()=>{
+    if(heroMapGirls) heroMapGirls.invalidateSize();
+    if(heroMapBoys) heroMapBoys.invalidateSize();
+    if(heroMapAll) heroMapAll.invalidateSize();
+    if(fullMap) fullMap.invalidateSize();
+  },200);
+}
 
 /* Init */
 loadConfig();
 initFirebase();
 fAll();fGirls();fBoys();
+
+let heroMapAll, heroMapGirls, heroMapBoys, fullMap;
+
+function initMaps() {
+
+  // ALL PAGE MAP
+  heroMapAll = L.map('heroMapAll', {
+    zoomControl: false,
+    attributionControl: false,
+    dragging: false,
+    scrollWheelZoom: false
+  }).setView([28.4700, 77.5000], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(heroMapAll);
+
+  // GIRLS PAGE MAP
+  heroMapGirls = L.map('heroMapGirls', {
+    zoomControl: false,
+    attributionControl: false,
+    dragging: false,
+    scrollWheelZoom: false
+  }).setView([28.4700, 77.5000], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(heroMapGirls);
+
+  // BOYS PAGE MAP
+  heroMapBoys = L.map('heroMapBoys', {
+    zoomControl: false,
+    attributionControl: false,
+    dragging: false,
+    scrollWheelZoom: false
+  }).setView([28.4700, 77.5000], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(heroMapBoys);
+
+  // ADD MARKERS TO ALL HERO MAPS
+  hostels.forEach(h => {
+    if (h.lat && h.lng) {
+
+      L.circleMarker([h.lat, h.lng], {
+        radius: 4,
+        color: h.gender === "girls" ? "#ff4da6" : "#3388ff"
+      }).addTo(heroMapAll);
+
+      if (h.gender === "girls") {
+        L.circleMarker([h.lat, h.lng], { radius: 4, color: "#ff4da6" }).addTo(heroMapGirls);
+      }
+
+      if (h.gender === "boys") {
+        L.circleMarker([h.lat, h.lng], { radius: 4, color: "#3388ff" }).addTo(heroMapBoys);
+      }
+    }
+  });
+
+  // FULL MAP
+  fullMap = L.map('fullMap').setView([28.4700, 77.5000], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(fullMap);
+
+  hostels.forEach(h => {
+    if (h.lat && h.lng) {
+      L.marker([h.lat, h.lng])
+        .addTo(fullMap)
+        .bindPopup(`<b>${h.name}</b><br>${h.loc}<br>₹${h.price}`);
+    }
+  });
+}
+window.onload = function() {
+  initMaps();
+};
 </script>
 </body>
 </html>
